@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TubeNook — Settings &amp; Backup</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="opt-page">
+    <header class="opt-header">
+      <div class="opt-brand">
+        <img src="../../assets/icons/icon48.png" alt="TubeNook" width="40" height="40" class="opt-logo" />
+        <div>
+          <h1 class="opt-title" id="ui-page-title">TubeNook — Configurações &amp; Backup</h1>
+          <p class="opt-subtitle" id="ui-page-subtitle">Organizador de Inscrições, Playlists &amp; Cursos do YouTube</p>
+        </div>
+      </div>
+      <div class="opt-stats-pills">
+        <span class="opt-stat-pill"><strong id="stat-groups">0</strong> <span id="lbl-stat-groups">Grupos</span></span>
+        <span class="opt-stat-pill"><strong id="stat-channels">0</strong> <span id="lbl-stat-channels">Canais</span></span>
+        <span class="opt-stat-pill"><strong id="stat-playlists">0</strong> <span id="lbl-stat-playlists">Playlists</span></span>
+        <span class="opt-stat-pill"><strong id="stat-watched">0</strong> <span id="lbl-stat-watched">Assistidos</span></span>
+      </div>
+    </header>
+
+    <div class="opt-banner is-hidden" id="status-banner" role="status" aria-live="polite"></div>
+
+    <main class="opt-grid">
+      <!-- Appearance & Language -->
+      <section class="opt-card">
+        <h2 class="opt-card-title" id="sec-general">Idioma &amp; Aparência</h2>
+        <div class="opt-row-2">
+          <div class="opt-field">
+            <label for="opt-language" class="opt-label" id="lbl-language">Idioma</label>
+            <select id="opt-language" class="opt-select">
+              <option value="pt-BR">Português (Brasil)</option>
+              <option value="pt-PT">Português (Portugal)</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+          <div class="opt-field">
+            <label for="opt-theme" class="opt-label" id="lbl-theme">Tema</label>
+            <select id="opt-theme" class="opt-select">
+              <option value="auto" id="opt-theme-auto">Automático (Sistema / YouTube)</option>
+              <option value="dark" id="opt-theme-dark">Escuro</option>
+              <option value="light" id="opt-theme-light">Claro</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Channel Status Thresholds -->
+      <section class="opt-card">
+        <h2 class="opt-card-title" id="sec-status">Limites de Status dos Canais</h2>
+        <p class="opt-help" id="help-status">Defina quantos dias sem novos vídeos classificam cada canal.</p>
+        <div class="opt-row-3">
+          <div class="opt-field">
+            <label for="opt-active-days" class="opt-label" id="lbl-active-days">Ativo (dias)</label>
+            <input type="number" id="opt-active-days" class="opt-input" min="1" max="365" value="14" />
+          </div>
+          <div class="opt-field">
+            <label for="opt-slow-days" class="opt-label" id="lbl-slow-days">Lento (dias)</label>
+            <input type="number" id="opt-slow-days" class="opt-input" min="2" max="730" value="60" />
+          </div>
+          <div class="opt-field">
+            <label for="opt-inactive-days" class="opt-label" id="lbl-inactive-days">Inativo (dias)</label>
+            <input type="number" id="opt-inactive-days" class="opt-input" min="3" max="3650" value="180" />
+          </div>
+        </div>
+        <div class="status-preview" id="status-preview"></div>
+        <div class="opt-actions-inline">
+          <button type="button" class="opt-btn opt-btn-primary" id="btn-save-status">Salvar Limites</button>
+        </div>
+      </section>
+
+      <!-- Global Feed & Playlist Toggles -->
+      <section class="opt-card">
+        <h2 class="opt-card-title" id="sec-toggles">Feed, Playlists &amp; Automação</h2>
+        <div class="opt-toggles-list">
+          <label class="opt-toggle-item">
+            <div>
+              <div class="opt-toggle-title" id="lbl-focus-mode">Modo Foco</div>
+              <div class="opt-toggle-desc" id="desc-focus-mode">Oculta distrações do YouTube (recomendações laterais, comentários e Shorts).</div>
+            </div>
+            <input type="checkbox" id="opt-focus-mode" class="opt-switch" />
+          </label>
+          <label class="opt-toggle-item">
+            <div>
+              <div class="opt-toggle-title" id="lbl-hide-watched">Ocultar vídeos assistidos globalmente</div>
+            </div>
+            <input type="checkbox" id="opt-hide-watched" class="opt-switch" />
+          </label>
+          <label class="opt-toggle-item">
+            <div>
+              <div class="opt-toggle-title" id="lbl-hide-shorts">Ocultar YouTube Shorts globalmente</div>
+            </div>
+            <input type="checkbox" id="opt-hide-shorts" class="opt-switch" />
+          </label>
+          <label class="opt-toggle-item">
+            <div>
+              <div class="opt-toggle-title" id="lbl-show-badge">Exibir selo "ASSISTIDO" nos vídeos</div>
+            </div>
+            <input type="checkbox" id="opt-show-badge" class="opt-switch" />
+          </label>
+          <label class="opt-toggle-item">
+            <div>
+              <div class="opt-toggle-title" id="lbl-show-progress">Exibir barra de progresso nas playlists</div>
+            </div>
+            <input type="checkbox" id="opt-show-progress" class="opt-switch" />
+          </label>
+          <label class="opt-toggle-item">
+            <div>
+              <div class="opt-toggle-title" id="lbl-auto-tag">Ativar auto-tagging automático de canais</div>
+            </div>
+            <input type="checkbox" id="opt-auto-tag" class="opt-switch" />
+          </label>
+          <label class="opt-toggle-item">
+            <div>
+              <div class="opt-toggle-title" id="lbl-shortcuts">Atalhos de teclado no YouTube</div>
+            </div>
+            <input type="checkbox" id="opt-shortcuts" class="opt-switch" />
+          </label>
+        </div>
+      </section>
+
+      <!-- Keyboard Shortcuts Cheat Sheet -->
+      <section class="opt-card">
+        <h2 class="opt-card-title" id="sec-shortcuts">Atalhos de Teclado</h2>
+        <div class="shortcut-list" id="shortcut-list"></div>
+      </section>
+
+      <!-- Multi-Device Sync -->
+      <section class="opt-card opt-card-full">
+        <div class="opt-card-header-row">
+          <div>
+            <h2 class="opt-card-title" id="sec-sync">Sincronização Multi-Dispositivos (Chrome Sync &amp; Google Drive)</h2>
+            <p class="opt-help" id="help-sync">Mantenha seus grupos, canais, playlists e histórico sincronizados entre navegadores.</p>
+          </div>
+          <span class="sync-status-badge" id="sync-last-status">Última sincronização: nunca</span>
+        </div>
+
+        <div class="opt-row-2">
+          <div class="opt-field">
+            <label for="opt-sync-provider" class="opt-label" id="lbl-sync-provider">Provedor de Sincronização</label>
+            <select id="opt-sync-provider" class="opt-select">
+              <option value="none" id="opt-sync-none">Desativado</option>
+              <option value="chrome" id="opt-sync-chrome">Chrome Profile Sync (Automático)</option>
+              <option value="gdrive" id="opt-sync-gdrive">Google Drive (AppData)</option>
+            </select>
+          </div>
+          <div class="opt-field opt-field-center">
+            <label class="opt-toggle-item opt-toggle-compact">
+              <div>
+                <div class="opt-toggle-title" id="lbl-sync-auto">Sincronização automática</div>
+              </div>
+              <input type="checkbox" id="opt-sync-auto" class="opt-switch" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Chrome Sync Panel -->
+        <div class="sync-provider-panel is-hidden" id="panel-sync-chrome">
+          <p class="opt-help" id="help-sync-chrome">Usa o perfil logado do Chrome (limite seguro de 95 KB, ideal para listas compactas).</p>
+          <div class="opt-btn-row">
+            <button type="button" class="opt-btn opt-btn-primary" id="btn-sync-chrome-push">☁ Enviar para Chrome Sync</button>
+            <button type="button" class="opt-btn opt-btn-secondary" id="btn-sync-chrome-pull">⬇ Restaurar do Chrome Sync</button>
+          </div>
+        </div>
+
+        <!-- Google Drive Panel -->
+        <div class="sync-provider-panel is-hidden" id="panel-sync-gdrive">
+          <div class="opt-field">
+            <label for="opt-gdrive-client-id" class="opt-label" id="lbl-gdrive-client-id">Google OAuth Client ID</label>
+            <input type="text" id="opt-gdrive-client-id" class="opt-input" placeholder="1234567890-abcdefg.apps.googleusercontent.com" autocomplete="off" />
+            <div class="opt-redirect-note" id="gdrive-redirect-note"></div>
+          </div>
+          <div class="opt-btn-row">
+            <button type="button" class="opt-btn opt-btn-primary" id="btn-sync-gdrive-push">☁ Sincronizar com Google Drive</button>
+            <button type="button" class="opt-btn opt-btn-secondary" id="btn-sync-gdrive-pull">⬇ Restaurar do Google Drive</button>
+            <button type="button" class="opt-btn opt-btn-danger-outline" id="btn-sync-gdrive-disconnect">Desconectar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Smart Rules -->
+      <section class="opt-card opt-card-full">
+        <div class="opt-card-header-row">
+          <div>
+            <h2 class="opt-card-title" id="sec-rules">Regras Automáticas (Smart Rules)</h2>
+            <p class="opt-help" id="help-rules">Organize canais automaticamente em grupos ou oculte vídeos com base em tags e palavras-chave.</p>
+          </div>
+          <button type="button" class="opt-btn opt-btn-secondary" id="btn-apply-rules">⚡ Aplicar Regras Agora</button>
+        </div>
+
+        <div class="rules-list" id="smart-rules-list"></div>
+
+        <form class="rule-form" id="form-add-rule">
+          <div class="rule-form-grid">
+            <div class="opt-field">
+              <label for="rule-name" class="opt-label" id="lbl-rule-name">Nome da regra</label>
+              <input type="text" id="rule-name" class="opt-input" placeholder="Ex: Canais de IA" required />
+            </div>
+            <div class="opt-field">
+              <label for="rule-match-type" class="opt-label" id="lbl-rule-match">Tipo de correspondência</label>
+              <select id="rule-match-type" class="opt-select">
+                <option value="tag" id="opt-rule-tag">Tag</option>
+                <option value="keyword" id="opt-rule-keyword">Palavra-chave</option>
+              </select>
+            </div>
+            <div class="opt-field">
+              <label for="rule-pattern" class="opt-label" id="lbl-rule-pattern">Padrão</label>
+              <input type="text" id="rule-pattern" class="opt-input" placeholder="Ex: ai, llm, javascript" required />
+            </div>
+            <div class="opt-field">
+              <label for="rule-action-type" class="opt-label" id="lbl-rule-action">Ação</label>
+              <select id="rule-action-type" class="opt-select">
+                <option value="assign_group" id="opt-rule-assign">Atribuir ao grupo</option>
+                <option value="hide_video" id="opt-rule-hide">Ocultar vídeo</option>
+              </select>
+            </div>
+            <div class="opt-field" id="rule-target-group-wrap">
+              <label for="rule-target-group" class="opt-label" id="lbl-rule-group">Grupo de destino</label>
+              <select id="rule-target-group" class="opt-select"></select>
+            </div>
+          </div>
+          <div class="opt-actions-inline">
+            <button type="submit" class="opt-btn opt-btn-primary" id="btn-add-rule">＋ Adicionar Regra</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Backup & Data Management -->
+      <section class="opt-card opt-card-full">
+        <h2 class="opt-card-title" id="sec-backup">Backup &amp; Gerenciamento de Dados</h2>
+        <p class="opt-help" id="help-backup">Exporte todos os seus grupos, canais, playlists, tags, colunas do Deck e histórico de assistidos em JSON ou exporte seus canais em CSV.</p>
+
+        <div class="backup-actions-grid">
+          <div class="backup-box">
+            <h3 class="backup-box-title" id="lbl-export-box">Exportação</h3>
+            <div class="opt-btn-group">
+              <button type="button" class="opt-btn opt-btn-primary" id="btn-export-json">⬇ Exportar Backup Completo (JSON)</button>
+              <button type="button" class="opt-btn opt-btn-secondary" id="btn-export-csv">⬇ Exportar Canais (CSV)</button>
+            </div>
+          </div>
+
+          <div class="backup-box">
+            <h3 class="backup-box-title" id="lbl-import-box">Importação (JSON)</h3>
+            <div class="opt-btn-group">
+              <button type="button" class="opt-btn opt-btn-secondary" id="btn-import-merge">⬆ Importar Backup (Mesclar)</button>
+              <button type="button" class="opt-btn opt-btn-secondary" id="btn-import-replace">⬆ Importar Backup (Substituir)</button>
+              <input type="file" id="file-import-json" accept=".json,application/json" hidden />
+            </div>
+          </div>
+
+          <div class="backup-box backup-box-danger">
+            <h3 class="backup-box-title" id="lbl-danger-box">Zona de Perigo</h3>
+            <div class="opt-btn-group">
+              <button type="button" class="opt-btn opt-btn-danger-outline" id="btn-clear-watched">🧹 Limpar Histórico de Assistidos</button>
+              <button type="button" class="opt-btn opt-btn-danger" id="btn-reset-all">⚠️ Redefinir Todos os Dados</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Discreet Support Card -->
+      <section class="opt-card opt-card-full opt-support-card">
+        <div class="opt-support-content">
+          <div>
+            <h2 class="opt-support-title" id="sec-support">Apoie o TubeNook</h2>
+            <p class="opt-support-desc" id="desc-support">O TubeNook é 100% gratuito e sem paywall. Se ele ajuda você a organizar seu YouTube, considere pagar um café!</p>
+          </div>
+          <a
+            id="btn-buy-coffee"
+            class="opt-btn opt-btn-secondary opt-support-btn"
+            href="https://buymeacoffee.com/aevren"
+            target="_blank"
+            rel="noopener noreferrer"
+          >☕ Pagar um Café (Buy Me a Coffee)</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

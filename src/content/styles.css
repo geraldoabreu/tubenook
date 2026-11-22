@@ -1,0 +1,400 @@
+/**
+ * TubeNook — Shared base styles, CSS variables, theme tokens, and reusable UI primitives.
+ * Scoped to .tp-* classes to avoid colliding with YouTube's styles.
+ */
+
+:root,
+html[dark] {
+  --tp-bg: #0f0f0f;
+  --tp-surface: #181818;
+  --tp-surface-2: #242424;
+  --tp-surface-3: #303030;
+  --tp-text: #f1f1f1;
+  --tp-text-muted: #aaaaaa;
+  --tp-border: rgba(255, 255, 255, 0.12);
+  --tp-border-strong: rgba(255, 255, 255, 0.22);
+  --tp-accent: #ef233c;
+  --tp-accent-hover: #ff3b52;
+  --tp-accent-soft: rgba(239, 35, 60, 0.16);
+  --tp-danger: #ef4444;
+  --tp-danger-hover: #dc2626;
+  --tp-success: #22c55e;
+  --tp-success-soft: rgba(34, 197, 94, 0.16);
+  --tp-warning: #f59e0b;
+  --tp-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  --tp-radius: 10px;
+  --tp-radius-sm: 6px;
+  --tp-font: "Roboto", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html:not([dark]),
+.tp-light {
+  --tp-bg: #f9f9f9;
+  --tp-surface: #ffffff;
+  --tp-surface-2: #f2f2f2;
+  --tp-surface-3: #e5e5e5;
+  --tp-text: #0f0f0f;
+  --tp-text-muted: #606060;
+  --tp-border: rgba(0, 0, 0, 0.1);
+  --tp-border-strong: rgba(0, 0, 0, 0.2);
+  --tp-accent: #ef233c;
+  --tp-accent-hover: #d90429;
+  --tp-accent-soft: rgba(239, 35, 60, 0.12);
+  --tp-danger: #dc2626;
+  --tp-danger-hover: #b91c1c;
+  --tp-success: #16a34a;
+  --tp-success-soft: rgba(22, 163, 74, 0.14);
+  --tp-warning: #d97706;
+  --tp-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+}
+
+/* Shared reset inside PlayShelf containers */
+.tp-root,
+.tp-modal-backdrop,
+.tp-deck-overlay,
+.tp-toast-container {
+  font-family: var(--tp-font);
+  color: var(--tp-text);
+  box-sizing: border-box;
+}
+
+.tp-root *,
+.tp-modal-backdrop *,
+.tp-deck-overlay *,
+.tp-toast-container * {
+  box-sizing: border-box;
+}
+
+/* Shared Buttons */
+.tp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--tp-border);
+  background: var(--tp-surface-2);
+  color: var(--tp-text);
+  font-family: var(--tp-font);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tp-btn:hover {
+  background: var(--tp-surface-3);
+  border-color: var(--tp-border-strong);
+}
+
+.tp-btn:active {
+  transform: scale(0.98);
+}
+
+.tp-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tp-btn-primary {
+  background: var(--tp-accent);
+  border-color: var(--tp-accent);
+  color: #ffffff;
+}
+
+.tp-btn-primary:hover {
+  background: var(--tp-accent-hover);
+  border-color: var(--tp-accent-hover);
+}
+
+.tp-btn-secondary {
+  background: var(--tp-surface-2);
+  border-color: var(--tp-border);
+  color: var(--tp-text);
+}
+
+.tp-btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--tp-text-muted);
+}
+
+.tp-btn-ghost:hover {
+  background: var(--tp-surface-2);
+  color: var(--tp-text);
+  border-color: transparent;
+}
+
+.tp-btn-danger {
+  background: var(--tp-danger);
+  border-color: var(--tp-danger);
+  color: #ffffff;
+}
+
+.tp-btn-danger:hover {
+  background: var(--tp-danger-hover);
+  border-color: var(--tp-danger-hover);
+}
+
+.tp-btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.tp-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--tp-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.tp-btn-icon:hover {
+  background: var(--tp-surface-2);
+  color: var(--tp-text);
+}
+
+.tp-btn-icon.is-active {
+  background: var(--tp-accent-soft);
+  color: var(--tp-accent);
+  border-color: var(--tp-accent);
+}
+
+/* Inputs & Selects */
+.tp-input,
+.tp-select,
+.tp-textarea {
+  width: 100%;
+  padding: 8px 11px;
+  border-radius: var(--tp-radius-sm);
+  border: 1px solid var(--tp-border);
+  background: var(--tp-surface-2);
+  color: var(--tp-text);
+  font-family: var(--tp-font);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tp-input:focus,
+.tp-select:focus,
+.tp-textarea:focus {
+  border-color: var(--tp-accent);
+  background: var(--tp-surface);
+}
+
+.tp-input::placeholder {
+  color: var(--tp-text-muted);
+}
+
+/* Pills & Badges */
+.tp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--tp-surface-2);
+  color: var(--tp-text);
+  border: 1px solid var(--tp-border);
+}
+
+.tp-pill-accent {
+  background: var(--tp-accent-soft);
+  color: var(--tp-accent);
+  border-color: rgba(239, 35, 60, 0.35);
+}
+
+.tp-pill-success {
+  background: var(--tp-success-soft);
+  color: var(--tp-success);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.tp-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--tp-surface-3);
+  color: var(--tp-text-muted);
+}
+
+/* Shared Modal */
+.tp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(0, 0, 0, 0.68);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: tpFadeIn 0.14s ease-out;
+}
+
+.tp-modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  background: var(--tp-surface);
+  color: var(--tp-text);
+  border: 1px solid var(--tp-border);
+  border-radius: 14px;
+  box-shadow: var(--tp-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tp-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--tp-border);
+}
+
+.tp-modal-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tp-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tp-modal-body {
+  padding: 18px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.tp-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--tp-border);
+  background: var(--tp-surface-2);
+}
+
+.tp-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.tp-form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tp-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Shared Toast Notifications */
+.tp-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100050;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.tp-toast {
+  pointer-events: auto;
+  min-width: 240px;
+  max-width: 380px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: var(--tp-surface);
+  color: var(--tp-text);
+  border: 1px solid var(--tp-border-strong);
+  box-shadow: var(--tp-shadow);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: tpSlideUp 0.18s ease-out;
+}
+
+.tp-toast-success {
+  border-left: 4px solid var(--tp-success);
+}
+
+.tp-toast-error {
+  border-left: 4px solid var(--tp-danger);
+}
+
+.tp-toast-info {
+  border-left: 4px solid var(--tp-accent);
+}
+
+.tp-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes tpFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tpSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus Mode — hide distracting YouTube elements without affecting player or PlayShelf UI */
+html.tp-focus-mode #secondary.ytd-watch-flexy,
+html.tp-focus-mode #comments.ytd-watch-flexy,
+html.tp-focus-mode ytd-reel-shelf-renderer,
+html.tp-focus-mode ytd-rich-shelf-renderer[is-shorts] {
+  display: none !important;
+}
+
+html.tp-focus-mode ytd-watch-flexy:not([theater]):not([fullscreen]) #primary.ytd-watch-flexy {
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TubeNook — YouTube Subscriptions, Playlists, Deck &amp; Courses</title>
+  <meta name="description" content="Organize YouTube subscriptions, custom playlists, multi-column Deck, Courses Mode, timestamped notes and Focus Mode. 100% local-first and private." />
+  <meta name="theme-color" content="#0F111E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='16' y1='16' x2='112' y2='112' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0%25' stop-color='%23FF4F64'/%3E%3Cstop offset='52%25' stop-color='%23D9468F'/%3E%3Cstop offset='100%25' stop-color='%236366F1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='6' y='6' width='116' height='116' rx='28' fill='%23141628' stroke='url(%23g)' stroke-width='5'/%3E%3Crect x='24' y='26' width='80' height='66' rx='16' fill='url(%23g)'/%3E%3Cpath d='M62 43.5C62 40.8 64.9 39.2 67.2 40.6L91.8 55.6C94 56.9 94 60.1 91.8 61.4L67.2 76.4C64.9 77.8 62 76.2 62 73.5Z' fill='%23FFF'/%3E%3Crect x='24' y='98' width='80' height='8' rx='4' fill='%23FF7A8A'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg-0: #0c0e1a;
+      --bg-1: #131628;
+      --bg-2: #1a1e36;
+      --bg-card: rgba(24, 28, 52, 0.72);
+      --border: rgba(148, 163, 224, 0.15);
+      --border-strong: rgba(148, 163, 224, 0.28);
+      --text-0: #f8fafc;
+      --text-1: #cbd5e1;
+      --text-2: #94a3b8;
+      --coral: #ff4f64;
+      --pink: #d9468f;
+      --indigo: #6366f1;
+      --emerald: #34d399;
+      --amber: #fbbf24;
+      --sky: #38bdf8;
+      --brand-grad: linear-gradient(135deg, #ff4f64 0%, #d9468f 52%, #6366f1 100%);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow-lg: 0 24px 60px rgba(4, 6, 18, 0.55);
+      --max-w: 1140px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-0);
+      color: var(--text-0);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 520px at 14% -5%, rgba(255, 79, 100, 0.16), transparent 60%),
+        radial-gradient(820px 520px at 88% 8%, rgba(99, 102, 241, 0.18), transparent 60%),
+        var(--bg-0);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header / Navbar */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(12, 14, 26, 0.78);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      height: 70px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .brand-accent {
+      background: var(--brand-grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 0.92rem;
+      color: var(--text-1);
+    }
+
+    .nav-links a {
+      transition: color 0.18s ease;
+    }
+    .nav-links a:hover { color: var(--text-0); }
+
+    .lang-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .lang-btn {
+      border: 0;
+      background: transparent;
+      color: var(--text-2);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .lang-btn:hover { color: var(--text-0); }
+    .lang-btn.active {
+      background: var(--brand-grad);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(255, 79, 100, 0.35);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 22px;
+      border-radius: 12px;
+      font-weight: 650;
+      font-size: 0.96rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: translateY(1px); }
+
+    .btn-primary {
+      background: var(--brand-grad);
+      color: #fff;
+      box-shadow: 0 10px 28px rgba(217, 70, 143, 0.32);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(217, 70, 143, 0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-0);
+      border-color: var(--border-strong);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-coffee {
+      background: rgba(251, 191, 36, 0.12);
+      color: #fde68a;
+      border-color: rgba(251, 191, 36, 0.34);
+      padding: 10px 18px;
+      font-size: 0.9rem;
+    }
+    .btn-coffee:hover {
+      background: rgba(251, 191, 36, 0.2);
+      border-color: rgba(251, 191, 36, 0.58);
+      transform: translateY(-1px);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 72px 0 64px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.14);
+      border: 1px solid rgba(129, 140, 248, 0.32);
+      color: #c7d2fe;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2.1rem, 4.2vw, 3.25rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      font-weight: 850;
+    }
+
+    .gradient-text {
+      background: var(--brand-grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-sub {
+      margin: 0 0 28px;
+      color: var(--text-1);
+      font-size: 1.08rem;
+      max-width: 540px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 0.86rem;
+      color: var(--text-2);
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Hero UI Mockup */
+    .mockup-shell {
+      background: linear-gradient(160deg, rgba(28, 32, 58, 0.92), rgba(16, 19, 36, 0.96));
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .mockup-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(12, 14, 26, 0.72);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+    .dots i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .mockup-pill {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 79, 100, 0.16);
+      color: #fda4af;
+      border: 1px solid rgba(255, 79, 100, 0.3);
+    }
+
+    .mockup-body {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 14px;
+    }
+
+    .mock-sidebar {
+      background: rgba(12, 14, 26, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mock-folder {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-1);
+      padding: 6px 8px;
+      border-radius: 8px;
+    }
+    .mock-folder.active {
+      background: rgba(99, 102, 241, 0.2);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .mock-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .mock-deck {
+      display: grid;
+      gap: 10px;
+    }
+
+    .mock-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .mock-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .mock-tag {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.16);
+      color: #6ee7b7;
+    }
+
+    .mock-progress {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .mock-progress > span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--brand-grad);
+    }
+
+    .mock-note {
+      font-size: 0.75rem;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mock-ts {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.16);
+      color: #7dd3fc;
+      font-weight: 700;
+    }
+
+    /* Sections */
+    section {
+      padding: 64px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 44px;
+    }
+
+    .section-kicker {
+      font-size: 0.8rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #fb7185;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.65rem, 3vw, 2.3rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--text-2);
+      font-size: 1rem;
+    }
+
+    /* Feature Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-strong);
+      background: rgba(30, 35, 64, 0.85);
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+    }
+
+    .feature-card h3 {
+      margin: 0;
+      font-size: 1.03rem;
+      letter-spacing: -0.01em;
+    }
+
+    .feature-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.55;
+    }
+
+    /* Privacy Banner */
+    .privacy-banner {
+      background: linear-gradient(135deg, rgba(24, 28, 54, 0.9), rgba(17, 22, 42, 0.92));
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .privacy-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin-top: 14px;
+      font-size: 0.88rem;
+      color: var(--text-1);
+    }
+
+    .privacy-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Suggestions Form + Support Grid */
+    .community-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+      letter-spacing: -0.015em;
+    }
+
+    .panel-desc {
+      margin: 0 0 22px;
+      color: var(--text-2);
+      font-size: 0.94rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-1);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      background: rgba(11, 13, 25, 0.82);
+      color: var(--text-0);
+      font: inherit;
+      font-size: 0.94rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.22);
+    }
+
+    .field textarea {
+      min-height: 112px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .feedback-msg {
+      margin-top: 12px;
+      font-size: 0.86rem;
+      color: var(--emerald);
+      min-height: 20px;
+    }
+
+    .coffee-panel {
+      background: linear-gradient(160deg, rgba(32, 28, 48, 0.85), rgba(20, 22, 40, 0.88));
+      border: 1px solid rgba(251, 191, 36, 0.22);
+    }
+
+    .coffee-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fde68a;
+      margin-bottom: 10px;
+    }
+
+    .coffee-note {
+      font-size: 0.84rem;
+      color: var(--text-2);
+      margin-top: 14px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 0 44px;
+      margin-top: 24px;
+      color: var(--text-2);
+      font-size: 0.88rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .footer-links button,
+    .footer-links a {
+      background: none;
+      border: 0;
+      padding: 0;
+      color: var(--text-2);
+      font: inherit;
+      cursor: pointer;
+      transition: color 0.16s ease;
+    }
+    .footer-links button:hover,
+    .footer-links a:hover {
+      color: var(--text-0);
+    }
+
+    /* Privacy Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5, 7, 16, 0.76);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal-box {
+      width: 100%;
+      max-width: 680px;
+      max-height: 84vh;
+      overflow-y: auto;
+      background: #14172b;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-head h3 { margin: 0; font-size: 1.25rem; }
+
+    .modal-close {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-0);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .modal-body h4 {
+      margin: 18px 0 6px;
+      font-size: 0.98rem;
+      color: var(--text-0);
+    }
+    .modal-body p {
+      margin: 0 0 10px;
+      font-size: 0.92rem;
+      color: var(--text-1);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-grid { grid-template-columns: 1fr; }
+      .privacy-banner { grid-template-columns: 1fr; }
+      .privacy-actions { justify-content: flex-start; }
+      .community-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .mockup-body { grid-template-columns: 1fr; }
+      .hero { padding: 48px 0 40px; }
+      section { padding: 44px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-inner">
+      <a href="#top" class="brand" aria-label="TubeNook">
+        <svg class="brand-logo" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="hdr-bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#141628"/>
+              <stop offset="100%" stop-color="#1E1B3A"/>
+            </linearGradient>
+            <linearGradient id="hdr-brand" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FF4F64"/>
+              <stop offset="52%" stop-color="#D9468F"/>
+              <stop offset="100%" stop-color="#6366F1"/>
+            </linearGradient>
+            <linearGradient id="hdr-spine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#FF7A8A"/>
+              <stop offset="100%" stop-color="#818CF8"/>
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="116" height="116" rx="28" fill="url(#hdr-bg)" stroke="url(#hdr-brand)" stroke-width="4"/>
+          <rect x="24" y="26" width="80" height="66" rx="16" fill="url(#hdr-brand)"/>
+          <rect x="33" y="36" width="8" height="46" rx="4" fill="#141628" opacity="0.28"/>
+          <rect x="45" y="42" width="7" height="40" rx="3.5" fill="#141628" opacity="0.22"/>
+          <path d="M62 43.5 C62 40.8 64.9 39.2 67.2 40.6 L91.8 55.6 C94.0 56.9 94.0 60.1 91.8 61.4 L67.2 76.4 C64.9 77.8 62 76.2 62 73.5 Z" fill="#FFFFFF"/>
+          <rect x="24" y="98" width="80" height="8" rx="4" fill="url(#hdr-spine)"/>
+        </svg>
+        <span>Tube<span class="brand-accent">Nook</span></span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#features" data-i18n="nav_features">Recursos</a>
+        <a href="#privacy" data-i18n="nav_privacy">Privacidade</a>
+        <a href="#suggestions" data-i18n="nav_suggestions">Sugestões</a>
+      </nav>
+
+      <div class="lang-switcher" role="group" aria-label="Language switcher">
+        <button type="button" class="lang-btn" data-lang="pt-BR">PT-BR</button>
+        <button type="button" class="lang-btn" data-lang="pt-PT">PT</button>
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+        <button type="button" class="lang-btn" data-lang="es">ES</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="pill-badge">
+            <span class="pill-dot"></span>
+            <span data-i18n="hero_badge">100% Local-First • Manifest V3 • Sem rastreamento</span>
+          </div>
+          <h1>
+            <span data-i18n="hero_title_1">Seu espaço calmo e organizado no</span>
+            <span class="gradient-text">YouTube</span>
+          </h1>
+          <p class="hero-sub" data-i18n="hero_sub">
+            Organize inscrições em pastas aninhadas, crie playlists personalizadas, acompanhe tudo no YouTube Deck e estude com Modo Cursos, notas com timestamps e Modo Foco.
+          </p>
+          <div class="hero-actions">
+            <a href="https://chromewebstore.google.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="cws-cta">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/>
+              </svg>
+              <span data-i18n="hero_cta">Adicionar ao Chrome</span>
+            </a>
+            <a href="#features" class="btn btn-secondary" data-i18n="hero_secondary">Ver recursos</a>
+          </div>
+          <div class="hero-meta">
+            <span>✓ <span data-i18n="hero_meta_1">Gratuito &amp; sem anúncios</span></span>
+            <span>✓ <span data-i18n="hero_meta_2">Chrome Sync &amp; Google Drive opcional</span></span>
+            <span>✓ <span data-i18n="hero_meta_3">4 idiomas nativos</span></span>
+          </div>
+        </div>
+
+        <!-- Clean UI Preview Mockup -->
+        <div class="mockup-shell" aria-hidden="true">
+          <div class="mockup-bar">
+            <div class="dots">
+              <i style="background:#ff4f64"></i>
+              <i style="background:#fbbf24"></i>
+              <i style="background:#34d399"></i>
+            </div>
+            <span class="mockup-pill" data-i18n="mock_focus">Modo Foco Ativo</span>
+          </div>
+          <div class="mockup-body">
+            <div class="mock-sidebar">
+              <div class="mock-folder active"><span class="mock-dot" style="background:#ff4f64"></span><span data-i18n="mock_f1">Dev &amp; Código</span></div>
+              <div class="mock-folder"><span class="mock-dot" style="background:#818cf8"></span><span data-i18n="mock_f2">Cursos</span></div>
+              <div class="mock-folder"><span class="mock-dot" style="background:#34d399"></span><span data-i18n="mock_f3">Design</span></div>
+              <div class="mock-folder"><span class="mock-dot" style="background:#fbbf24"></span><span data-i18n="mock_f4">Podcasts</span></div>
+            </div>
+            <div class="mock-deck">
+              <div class="mock-card">
+                <div class="mock-card-head">
+                  <span data-i18n="mock_course_title">Modo Cursos • Módulo 3</span>
+                  <span class="mock-tag">75%</span>
+                </div>
+                <div class="mock-note">
+                  <span class="mock-ts">14:22</span>
+                  <span data-i18n="mock_note_1">Resumo de arquitetura limpa e testes</span>
+                </div>
+                <div class="mock-progress"><span style="width:75%"></span></div>
+              </div>
+              <div class="mock-card">
+                <div class="mock-card-head">
+                  <span data-i18n="mock_deck_title">YouTube Deck • 3 Colunas</span>
+                  <span class="mock-tag" style="background:rgba(99,102,241,0.18);color:#c7d2fe" data-i18n="mock_synced">Sincronizado</span>
+                </div>
+                <div class="mock-note">
+                  <span class="mock-ts">04:08</span>
+                  <span data-i18n="mock_note_2">Novo vídeo na pasta Dev &amp; Código</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker" data-i18n="feat_kicker">Tudo em um só lugar</div>
+          <h2 data-i18n="feat_title">Recursos pensados para quem usa o YouTube de verdade</h2>
+          <p data-i18n="feat_sub">Organização de canais, listas, colunas estilo Deck e ferramentas completas de estudo integradas diretamente à interface do YouTube.</p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#ff4f64">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3 data-i18n="f1_title">Grupos de Inscrições</h3>
+            <p data-i18n="f1_desc">Crie pastas e subpastas ilimitadas com cores e ícones para organizar todos os seus canais diretamente na barra lateral.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#d9468f">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </div>
+            <h3 data-i18n="f2_title">Listas de Reprodução Personalizadas</h3>
+            <p data-i18n="f2_desc">Monte coleções locais de vídeos e filtre por duração, status de assistido, canal, Shorts ou etiquetas.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#818cf8">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+            </div>
+            <h3 data-i18n="f3_title">YouTube Deck</h3>
+            <p data-i18n="f3_desc">Acompanhe vários grupos de canais, playlists e filas lado a lado em um painel em colunas rápido e limpo.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#34d399">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <h3 data-i18n="f4_title">Modo Cursos Automático</h3>
+            <p data-i18n="f4_desc">Transforme playlists e séries em cursos estruturados com organização automática de aulas, progresso e retomada instantânea.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#38bdf8">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3 data-i18n="f5_title">Notas &amp; Timestamps</h3>
+            <p data-i18n="f5_desc">Capture anotações vinculadas ao minuto exato do vídeo e clique no timestamp para voltar imediatamente ao trecho.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#fbbf24">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <h3 data-i18n="f6_title">Modo Foco</h3>
+            <p data-i18n="f6_desc">Oculte Shorts, recomendações laterais, comentários ou o feed inicial com um clique para estudar sem distrações.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#a78bfa">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3 data-i18n="f7_title">Insights</h3>
+            <p data-i18n="f7_desc">Acompanhe seu histórico ilimitado de vídeos assistidos, evolução nos cursos e estatísticas locais da sua biblioteca.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" style="color:#fb7185">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </div>
+            <h3 data-i18n="f8_title">Sincronização Flexível</h3>
+            <p data-i18n="f8_desc">Armazenamento local por padrão com opção de Chrome Sync, backup privado no Google Drive (appDataFolder) e exportação JSON.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy">
+      <div class="container">
+        <div class="privacy-banner">
+          <div>
+            <div class="section-kicker" data-i18n="priv_kicker">Privacidade por padrão</div>
+            <h2 style="margin-bottom:10px" data-i18n="priv_title">Seus dados pertencem somente a você</h2>
+            <p style="margin:0;color:var(--text-2)" data-i18n="priv_desc">
+              O TubeNook funciona 100% localmente no seu navegador, sem servidores próprios, sem analytics e sem anúncios. A sincronização via Chrome Sync ou Google Drive (appDataFolder) é totalmente opcional.
+            </p>
+            <div class="privacy-points">
+              <span>🔒 <span data-i18n="priv_p1">Zero rastreamento</span></span>
+              <span>💾 <span data-i18n="priv_p2">Local-first + JSON</span></span>
+              <span>☁️ <span data-i18n="priv_p3">Drive appDataFolder isolado</span></span>
+            </div>
+          </div>
+          <div class="privacy-actions">
+            <button type="button" class="btn btn-secondary" id="open-privacy-btn" data-i18n="priv_btn">Ler Política de Privacidade</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Suggestions & Discreet Support -->
+    <section id="suggestions">
+      <div class="container community-grid">
+        <div class="panel">
+          <h3 data-i18n="sug_title">Área de Sugestões</h3>
+          <p class="panel-desc" data-i18n="sug_desc">
+            Tem uma ideia de recurso, melhoria para o Modo Cursos ou encontrou algo para ajustar? Envie sua sugestão diretamente por e-mail ou copie a mensagem pronta.
+          </p>
+
+          <form id="suggestion-form">
+            <div class="form-grid">
+              <div class="field">
+                <label for="sug-name" data-i18n="sug_name_label">Seu nome (opcional)</label>
+                <input id="sug-name" type="text" autocomplete="name" data-i18n-placeholder="sug_name_ph" placeholder="Como prefere ser chamado" />
+              </div>
+              <div class="field">
+                <label for="sug-cat" data-i18n="sug_cat_label">Categoria</label>
+                <select id="sug-cat">
+                  <option value="feature" data-i18n="cat_feature">Nova funcionalidade</option>
+                  <option value="improvement" data-i18n="cat_improvement">Melhoria</option>
+                  <option value="courses" data-i18n="cat_courses">Modo Cursos</option>
+                  <option value="bug" data-i18n="cat_bug">Relatar problema</option>
+                  <option value="other" data-i18n="cat_other">Outro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="sug-text" data-i18n="sug_text_label">Sua sugestão</label>
+              <textarea id="sug-text" required data-i18n-placeholder="sug_text_ph" placeholder="Conte como o TubeNook pode ficar ainda melhor para você..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span data-i18n="sug_send">Enviar por e-mail</span>
+              </button>
+              <button type="button" class="btn btn-secondary" id="copy-suggestion-btn">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span data-i18n="sug_copy">Copiar mensagem / e-mail</span>
+              </button>
+            </div>
+            <div class="feedback-msg" id="sug-feedback" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+
+        <!-- Discreet Buy Me a Coffee Card -->
+        <aside class="panel coffee-panel">
+          <div class="coffee-badge">☕ <span data-i18n="coffee_kicker">Apoio opcional</span></div>
+          <h3 data-i18n="coffee_title">Curtiu o TubeNook?</h3>
+          <p class="panel-desc" data-i18n="coffee_desc">
+            O TubeNook é desenvolvido de forma independente, gratuito e livre de anúncios. Se a extensão economiza seu tempo no dia a dia, você pode pagar um café para apoiar novas atualizações.
+          </p>
+          <a href="https://buymeacoffee.com/aevren" target="_blank" rel="noopener noreferrer" class="btn btn-coffee">
+            <span>☕</span>
+            <span data-i18n="coffee_btn">Buy Me a Coffee</span>
+          </a>
+          <p class="coffee-note" data-i18n="coffee_note">Todos os recursos continuam 100% disponíveis para todos.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="brand" style="font-size:1rem">
+        <svg width="26" height="26" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+          <rect x="6" y="6" width="116" height="116" rx="28" fill="#141628" stroke="#D9468F" stroke-width="5"/>
+          <rect x="24" y="26" width="80" height="66" rx="16" fill="#D9468F"/>
+          <path d="M62 43.5 C62 40.8 64.9 39.2 67.2 40.6 L91.8 55.6 C94.0 56.9 94.0 60.1 91.8 61.4 L67.2 76.4 C64.9 77.8 62 76.2 62 73.5 Z" fill="#FFFFFF"/>
+          <rect x="24" y="98" width="80" height="8" rx="4" fill="#818CF8"/>
+        </svg>
+        <span>TubeNook</span>
+      </div>
+      <div class="footer-links">
+        <button type="button" id="footer-privacy-btn" data-i18n="footer_privacy">Política de Privacidade</button>
+        <a href="https://buymeacoffee.com/aevren" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a>
+        <a href="mailto:dev@aevren.si?subject=%5BTubeNook%5D%20Contato">dev@aevren.si</a>
+      </div>
+      <span data-i18n="footer_copy">© 2026 TubeNook. Feito com foco em privacidade.</span>
+    </div>
+  </footer>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 id="privacy-modal-title" data-i18n="modal_priv_title">Política de Privacidade — TubeNook</h3>
+        <button type="button" class="modal-close" id="close-privacy-btn" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body" id="privacy-modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const SUPPORT_EMAIL = 'dev@aevren.si';
+
+      const I18N = {
+        'pt-BR': {
+          page_title: 'TubeNook — Organizador de Inscrições, Playlists, Deck e Cursos no YouTube',
+          nav_features: 'Recursos',
+          nav_privacy: 'Privacidade',
+          nav_suggestions: 'Sugestões',
+          hero_badge: '100% Local-First • Manifest V3 • Sem rastreamento',
+          hero_title_1: 'Seu espaço calmo e organizado no',
+          hero_sub: 'Organize inscrições em pastas aninhadas, crie playlists personalizadas, acompanhe tudo no YouTube Deck e estude com Modo Cursos, notas com timestamps e Modo Foco.',
+          hero_cta: 'Adicionar ao Chrome',
+          hero_secondary: 'Ver recursos',
+          hero_meta_1: 'Gratuito & sem anúncios',
+          hero_meta_2: 'Chrome Sync & Google Drive opcional',
+          hero_meta_3: '4 idiomas nativos',
+          mock_focus: 'Modo Foco Ativo',
+          mock_f1: 'Dev & Código',
+          mock_f2: 'Cursos',
+          mock_f3: 'Design',
+          mock_f4: 'Podcasts',
+          mock_course_title: 'Modo Cursos • Módulo 3',
+          mock_note_1: 'Resumo de arquitetura limpa e testes',
+          mock_deck_title: 'YouTube Deck • 3 Colunas',
+          mock_synced: 'Sincronizado',
+          mock_note_2: 'Novo vídeo na pasta Dev & Código',
+          feat_kicker: 'Tudo em um só lugar',
+          feat_title: 'Recursos pensados para quem usa o YouTube de verdade',
+          feat_sub: 'Organização de canais, listas, colunas estilo Deck e ferramentas completas de estudo integradas diretamente à interface do YouTube.',
+          f1_title: 'Grupos de Inscrições',
+          f1_desc: 'Crie pastas e subpastas ilimitadas com cores e ícones para organizar todos os seus canais diretamente na barra lateral.',
+          f2_title: 'Listas de Reprodução Personalizadas',
+          f2_desc: 'Monte coleções locais de vídeos e filtre por duração, status de assistido, canal, Shorts ou etiquetas.',
+          f3_title: 'YouTube Deck',
+          f3_desc: 'Acompanhe vários grupos de canais, playlists e filas lado a lado em um painel em colunas rápido e limpo.',
+          f4_title: 'Modo Cursos com Organização Automática',
+          f4_desc: 'Transforme playlists e séries em cursos estruturados com detecção automática de módulos/aulas, progresso e retomada instantânea.',
+          f5_title: 'Notas & Timestamps',
+          f5_desc: 'Capture anotações vinculadas ao minuto exato do vídeo e clique no timestamp para voltar imediatamente ao trecho.',
+          f6_title: 'Modo Foco',
+          f6_desc: 'Oculte Shorts, recomendações laterais, comentários ou o feed inicial com um clique para estudar sem distrações.',
+          f7_title: 'Insights',
+          f7_desc: 'Acompanhe seu histórico ilimitado de vídeos assistidos, evolução nos cursos e estatísticas locais da sua biblioteca.',
+          f8_title: 'Sincronização (Chrome Sync + Drive)',
+          f8_desc: 'Armazenamento local por padrão com opção de Chrome Sync, backup privado no Google Drive (appDataFolder) e exportação JSON.',
+          priv_kicker: 'Privacidade por padrão',
+          priv_title: 'Seus dados pertencem somente a você',
+          priv_desc: 'O TubeNook funciona 100% localmente no seu navegador, sem servidores próprios, sem analytics e sem anúncios. A sincronização via Chrome Sync ou Google Drive (appDataFolder) é totalmente opcional.',
+          priv_p1: 'Zero rastreamento',
+          priv_p2: 'Local-first + JSON',
+          priv_p3: 'Drive appDataFolder isolado',
+          priv_btn: 'Ler Política de Privacidade',
+          sug_title: 'Área de Sugestões',
+          sug_desc: 'Tem uma ideia de recurso, melhoria para o Modo Cursos ou encontrou algo para ajustar? Envie sua sugestão diretamente por e-mail ou copie a mensagem pronta.',
+          sug_name_label: 'Seu nome (opcional)',
+          sug_name_ph: 'Como prefere ser chamado',
+          sug_cat_label: 'Categoria',
+          cat_feature: 'Nova funcionalidade',
+          cat_improvement: 'Melhoria',
+          cat_courses: 'Modo Cursos',
+          cat_bug: 'Relatar problema',
+          cat_other: 'Outro',
+          sug_text_label: 'Sua sugestão',
+          sug_text_ph: 'Conte como o TubeNook pode ficar ainda melhor para você...',
+          sug_send: 'Enviar por e-mail',
+          sug_copy: 'Copiar mensagem / e-mail',
+          sug_tag: 'Sugestão',
+          sug_opened: 'Abrindo seu cliente de e-mail... Se não abrir, clique em "Copiar mensagem / e-mail".',
+          sug_copied: 'Mensagem e e-mail (dev@aevren.si) copiados para a área de transferência!',
+          sug_empty: 'Escreva sua sugestão antes de enviar ou copiar.',
+          sug_anon: 'Anônimo',
+          coffee_kicker: 'Apoio opcional',
+          coffee_title: 'Curtiu o TubeNook?',
+          coffee_desc: 'O TubeNook é desenvolvido de forma independente, gratuito e livre de anúncios. Se a extensão economiza seu tempo no dia a dia, você pode pagar um café para apoiar novas atualizações.',
+          coffee_btn: 'Buy Me a Coffee',
+          coffee_note: 'Todos os recursos continuam 100% disponíveis para todos.',
+          footer_privacy: 'Política de Privacidade',
+          footer_copy: '© 2026 TubeNook. Feito com foco em privacidade.',
+          modal_priv_title: 'Política de Privacidade — TubeNook',
+          modal_priv_html: `
+            <h4>1. Arquitetura Local-First</h4>
+            <p>Todos os seus grupos de inscrições, playlists personalizadas, cursos, notas com timestamps, histórico de assistidos e preferências são salvos localmente no seu navegador via <code>chrome.storage.local</code>.</p>
+            <h4>2. Zero Coleta, Zero Rastreamento</h4>
+            <p>O TubeNook não possui servidores próprios, não coleta telemetria, não usa Google Analytics, não exibe anúncios e nunca vende ou compartilha dados de navegação.</p>
+            <h4>3. Sincronização Opcional</h4>
+            <p>Você pode ativar opcionalmente o <strong>Chrome Sync</strong> ou o backup privado no <strong>Google Drive</strong>. Quando conectado ao Drive, o TubeNook solicita exclusivamente o escopo restrito <code>drive.appdata</code> (pasta oculta isolada do app) e jamais acessa outros arquivos do seu Drive.</p>
+            <h4>4. Controle Total e Contato</h4>
+            <p>Você pode exportar sua biblioteca em JSON ou apagar todos os dados locais a qualquer momento. Dúvidas: <strong>dev@aevren.si</strong>.</p>
+          `
+        },
+        'pt-PT': {
+          page_title: 'TubeNook — Organizador de Subscrições, Playlists, Deck e Cursos no YouTube',
+          nav_features: 'Funcionalidades',
+          nav_privacy: 'Privacidade',
+          nav_suggestions: 'Sugestões',
+          hero_badge: '100% Local-First • Manifest V3 • Sem rastreamento',
+          hero_title_1: 'O seu espaço calmo e organizado no',
+          hero_sub: 'Organize subscrições em pastas aninhadas, crie listas de reprodução personalizadas, acompanhe tudo no YouTube Deck e estude com Modo Cursos, notas com timestamps e Modo Foco.',
+          hero_cta: 'Adicionar ao Chrome',
+          hero_secondary: 'Ver funcionalidades',
+          hero_meta_1: 'Gratuito e sem publicidade',
+          hero_meta_2: 'Chrome Sync e Google Drive opcional',
+          hero_meta_3: '4 idiomas nativos',
+          mock_focus: 'Modo Foco Ativo',
+          mock_f1: 'Dev & Código',
+          mock_f2: 'Cursos',
+          mock_f3: 'Design',
+          mock_f4: 'Podcasts',
+          mock_course_title: 'Modo Cursos • Módulo 3',
+          mock_note_1: 'Resumo de arquitetura limpa e testes',
+          mock_deck_title: 'YouTube Deck • 3 Colunas',
+          mock_synced: 'Sincronizado',
+          mock_note_2: 'Novo vídeo na pasta Dev & Código',
+          feat_kicker: 'Tudo num só lugar',
+          feat_title: 'Funcionalidades pensadas para quem usa o YouTube a sério',
+          feat_sub: 'Organização de canais, listas, colunas estilo Deck e ferramentas completas de estudo integradas diretamente na interface do YouTube.',
+          f1_title: 'Grupos de Subscrições',
+          f1_desc: 'Crie pastas e subpastas ilimitadas com cores e ícones para organizar todos os seus canais diretamente na barra lateral.',
+          f2_title: 'Listas de Reprodução Personalizadas',
+          f2_desc: 'Crie coleções locais de vídeos e filtre por duração, estado de visualização, canal, Shorts ou etiquetas.',
+          f3_title: 'YouTube Deck',
+          f3_desc: 'Acompanhe vários grupos de canais, playlists e filas lado a lado num painel em colunas rápido e limpo.',
+          f4_title: 'Modo Cursos com Organização Automática',
+          f4_desc: 'Converta playlists e séries em cursos estruturados com deteção automática de módulos/aulas, progresso e retoma imediata.',
+          f5_title: 'Notas & Timestamps',
+          f5_desc: 'Registe notas ligadas ao instante exato do vídeo e clique no timestamp para regressar imediatamente ao momento certo.',
+          f6_title: 'Modo Foco',
+          f6_desc: 'Oculte Shorts, sugestões laterais, comentários ou a página inicial com um clique para estudar sem distrações.',
+          f7_title: 'Insights',
+          f7_desc: 'Consulte o seu histórico ilimitado de vídeos vistos, evolução nos cursos e estatísticas locais da sua biblioteca.',
+          f8_title: 'Sincronização (Chrome Sync + Drive)',
+          f8_desc: 'Armazenamento local por defeito com opção de Chrome Sync, cópia privada no Google Drive (appDataFolder) e exportação JSON.',
+          priv_kicker: 'Privacidade por defeito',
+          priv_title: 'Os seus dados pertencem apenas a si',
+          priv_desc: 'O TubeNook funciona 100% localmente no seu navegador, sem servidores próprios, sem analytics e sem publicidade. A sincronização via Chrome Sync ou Google Drive (appDataFolder) é totalmente opcional.',
+          priv_p1: 'Zero rastreamento',
+          priv_p2: 'Local-first + JSON',
+          priv_p3: 'Drive appDataFolder isolado',
+          priv_btn: 'Ler Política de Privacidade',
+          sug_title: 'Área de Sugestões',
+          sug_desc: 'Tem uma ideia de funcionalidade, melhoria para o Modo Cursos ou encontrou algo para corrigir? Envie a sua sugestão por e-mail ou copie a mensagem pronta.',
+          sug_name_label: 'O seu nome (opcional)',
+          sug_name_ph: 'Como prefere ser tratado',
+          sug_cat_label: 'Categoria',
+          cat_feature: 'Nova funcionalidade',
+          cat_improvement: 'Melhoria',
+          cat_courses: 'Modo Cursos',
+          cat_bug: 'Reportar problema',
+          cat_other: 'Outro',
+          sug_text_label: 'A sua sugestão',
+          sug_text_ph: 'Conte-nos como o TubeNook pode ficar ainda melhor...',
+          sug_send: 'Enviar por e-mail',
+          sug_copy: 'Copiar mensagem / e-mail',
+          sug_tag: 'Sugestão',
+          sug_opened: 'A abrir o seu cliente de e-mail... Caso não abra, clique em "Copiar mensagem / e-mail".',
+          sug_copied: 'Mensagem e e-mail (dev@aevren.si) copiados para a área de transferência!',
+          sug_empty: 'Escreva a sua sugestão antes de enviar ou copiar.',
+          sug_anon: 'Anónimo',
+          coffee_kicker: 'Apoio opcional',
+          coffee_title: 'Gostou do TubeNook?',
+          coffee_desc: 'O TubeNook é desenvolvido de forma independente, gratuito e livre de publicidade. Se a extensão lhe poupa tempo no dia a dia, pode oferecer um café para apoiar futuras atualizações.',
+          coffee_btn: 'Buy Me a Coffee',
+          coffee_note: 'Todas as funcionalidades continuam 100% disponíveis para todos.',
+          footer_privacy: 'Política de Privacidade',
+          footer_copy: '© 2026 TubeNook. Criado com foco em privacidade.',
+          modal_priv_title: 'Política de Privacidade — TubeNook',
+          modal_priv_html: `
+            <h4>1. Arquitetura Local-First</h4>
+            <p>Todos os seus grupos de subscrições, playlists personalizadas, cursos, notas com timestamps, histórico de vistos e preferências são guardados localmente no navegador via <code>chrome.storage.local</code>.</p>
+            <h4>2. Zero Recolha, Zero Rastreamento</h4>
+            <p>O TubeNook não utiliza servidores próprios, não recolhe telemetria, não usa analytics, não mostra anúncios e nunca vende nem partilha dados de navegação.</p>
+            <h4>3. Sincronização Opcional</h4>
+            <p>Pode ativar opcionalmente o <strong>Chrome Sync</strong> ou a cópia de segurança privada no <strong>Google Drive</strong>. No Drive, o TubeNook pede apenas o âmbito restrito <code>drive.appdata</code> (pasta oculta isolada da aplicação) e nunca acede a outros ficheiros do seu Drive.</p>
+            <h4>4. Controlo Total e Contacto</h4>
+            <p>Pode exportar a sua biblioteca em JSON ou apagar todos os dados locais em qualquer momento. Contacto: <strong>dev@aevren.si</strong>.</p>
+          `
+        },
+        'en': {
+          page_title: 'TubeNook — YouTube Subscriptions, Playlists, Deck & Courses Organizer',
+          nav_features: 'Features',
+          nav_privacy: 'Privacy',
+          nav_suggestions: 'Suggestions',
+          hero_badge: '100% Local-First • Manifest V3 • Zero Tracking',
+          hero_title_1: 'Your calm, organized workspace for',
+          hero_sub: 'Group subscriptions into nested folders, build custom playlists, browse feeds in YouTube Deck, and study with auto-organized Courses Mode, timestamped notes, and Focus Mode.',
+          hero_cta: 'Add to Chrome',
+          hero_secondary: 'Explore features',
+          hero_meta_1: 'Free & ad-free',
+          hero_meta_2: 'Optional Chrome Sync & Google Drive',
+          hero_meta_3: '4 built-in languages',
+          mock_focus: 'Focus Mode On',
+          mock_f1: 'Dev & Code',
+          mock_f2: 'Courses',
+          mock_f3: 'Design',
+          mock_f4: 'Podcasts',
+          mock_course_title: 'Courses Mode • Module 3',
+          mock_note_1: 'Clean architecture & testing takeaways',
+          mock_deck_title: 'YouTube Deck • 3 Columns',
+          mock_synced: 'Synced',
+          mock_note_2: 'New upload in Dev & Code folder',
+          feat_kicker: 'Everything in one place',
+          feat_title: 'Built for people who truly use YouTube',
+          feat_sub: 'Channel folders, custom playlists, multi-column Deck views, and distraction-free learning tools integrated right inside YouTube.',
+          f1_title: 'Subscription Groups',
+          f1_desc: 'Organize channels into unlimited nested folders with custom colors and icons directly in YouTube’s sidebar.',
+          f2_title: 'Custom Playlists',
+          f2_desc: 'Build local video collections and filter by duration, watched status, channel, Shorts, or tags.',
+          f3_title: 'YouTube Deck',
+          f3_desc: 'Monitor multiple channel groups, playlists, and queues side by side in a clean multi-column dashboard.',
+          f4_title: 'Courses Mode (Auto-Organized)',
+          f4_desc: 'Turn playlists and series into structured courses with automatic module/lesson grouping, progress bars, and instant resume.',
+          f5_title: 'Notes & Timestamps',
+          f5_desc: 'Take notes linked to the exact video second and click any timestamp to jump right back to that moment.',
+          f6_title: 'Focus Mode',
+          f6_desc: 'Hide Shorts, sidebar recommendations, comments, or the homepage feed with one click whenever you need to focus.',
+          f7_title: 'Insights',
+          f7_desc: 'Keep an unlimited local watched history, monitor course completion, and view private library statistics.',
+          f8_title: 'Sync (Chrome Sync + Drive)',
+          f8_desc: 'Local-first storage by default with optional Chrome Sync, private Google Drive (appDataFolder) backup, and JSON export.',
+          priv_kicker: 'Privacy by default',
+          priv_title: 'Your data belongs strictly to you',
+          priv_desc: 'TubeNook runs 100% locally in your browser with zero backend servers, zero analytics, and zero ads. Optional sync uses Chrome Sync or an isolated Google Drive appDataFolder.',
+          priv_p1: 'Zero tracking',
+          priv_p2: 'Local-first + JSON',
+          priv_p3: 'Isolated Drive appDataFolder',
+          priv_btn: 'Read Privacy Policy',
+          sug_title: 'Suggestions Box',
+          sug_desc: 'Have a feature idea, Courses Mode improvement, or bug to report? Send your suggestion via email or copy the pre-formatted message in one click.',
+          sug_name_label: 'Your name (optional)',
+          sug_name_ph: 'How should we address you?',
+          sug_cat_label: 'Category',
+          cat_feature: 'New feature',
+          cat_improvement: 'Improvement',
+          cat_courses: 'Courses Mode',
+          cat_bug: 'Bug report',
+          cat_other: 'Other',
+          sug_text_label: 'Your suggestion',
+          sug_text_ph: 'Tell us how TubeNook can become even better for you...',
+          sug_send: 'Send via email',
+          sug_copy: 'Copy message / email',
+          sug_tag: 'Suggestion',
+          sug_opened: 'Opening your email app... If nothing opens, click "Copy message / email".',
+          sug_copied: 'Message & email (dev@aevren.si) copied to clipboard!',
+          sug_empty: 'Please write your suggestion before sending or copying.',
+          sug_anon: 'Anonymous',
+          coffee_kicker: 'Optional support',
+          coffee_title: 'Enjoying TubeNook?',
+          coffee_desc: 'TubeNook is independently built, free, and ad-free. If it saves you time every week, you can buy me a coffee to support ongoing updates.',
+          coffee_btn: 'Buy Me a Coffee',
+          coffee_note: 'Every feature stays 100% available to everyone.',
+          footer_privacy: 'Privacy Policy',
+          footer_copy: '© 2026 TubeNook. Built with privacy first.',
+          modal_priv_title: 'Privacy Policy — TubeNook',
+          modal_priv_html: `
+            <h4>1. Local-First Storage</h4>
+            <p>All subscription groups, custom playlists, courses, timestamped notes, watched history, and UI preferences are stored locally in your browser using <code>chrome.storage.local</code>.</p>
+            <h4>2. Zero Collection &amp; Zero Tracking</h4>
+            <p>TubeNook has no backend servers, collects zero telemetry or analytics, shows zero ads, and never sells or shares your browsing activity.</p>
+            <h4>3. Optional Sync &amp; Backups</h4>
+            <p>You may optionally enable <strong>Chrome Sync</strong> or private <strong>Google Drive</strong> backup. When connected to Drive, TubeNook requests only the restricted <code>drive.appdata</code> scope (an isolated hidden app folder) and cannot read or modify any of your other Drive files.</p>
+            <h4>4. Full Control &amp; Contact</h4>
+            <p>Export your full library to JSON or clear all local data anytime. Questions: <strong>dev@aevren.si</strong>.</p>
+          `
+        },
+        'es': {
+          page_title: 'TubeNook — Organizador de Suscripciones, Playlists, Deck y Cursos en YouTube',
+          nav_features: 'Funciones',
+          nav_privacy: 'Privacidad',
+          nav_suggestions: 'Sugerencias',
+          hero_badge: '100% Local-First • Manifest V3 • Sin rastreo',
+          hero_title_1: 'Tu espacio tranquilo y ordenado en',
+          hero_sub: 'Organiza suscripciones en carpetas anidadas, crea playlists personalizadas, explora todo en YouTube Deck y estudia con Modo Cursos, notas con marcas de tiempo y Modo Enfoque.',
+          hero_cta: 'Añadir a Chrome',
+          hero_secondary: 'Ver funciones',
+          hero_meta_1: 'Gratis y sin anuncios',
+          hero_meta_2: 'Chrome Sync y Google Drive opcional',
+          hero_meta_3: '4 idiomas nativos',
+          mock_focus: 'Modo Enfoque Activo',
+          mock_f1: 'Dev & Código',
+          mock_f2: 'Cursos',
+          mock_f3: 'Diseño',
+          mock_f4: 'Podcasts',
+          mock_course_title: 'Modo Cursos • Módulo 3',
+          mock_note_1: 'Resumen de arquitectura limpia y pruebas',
+          mock_deck_title: 'YouTube Deck • 3 Columnas',
+          mock_synced: 'Sincronizado',
+          mock_note_2: 'Nuevo vídeo en la carpeta Dev & Código',
+          feat_kicker: 'Todo en un solo lugar',
+          feat_title: 'Funciones pensadas para quienes usan YouTube de verdad',
+          feat_sub: 'Organización de canales, listas, columnas estilo Deck y herramientas completas de estudio integradas directamente en YouTube.',
+          f1_title: 'Grupos de Suscripciones',
+          f1_desc: 'Crea carpetas y subcarpetas ilimitadas con colores e iconos para ordenar todos tus canales en la barra lateral.',
+          f2_title: 'Listas de Reproducción Personalizadas',
+          f2_desc: 'Crea colecciones locales de vídeos y filtra por duración, estado de visualización, canal, Shorts o etiquetas.',
+          f3_title: 'YouTube Deck',
+          f3_desc: 'Sigue varios grupos de canales, playlists y colas en paralelo desde un panel en columnas rápido y limpio.',
+          f4_title: 'Modo Cursos con Organización Automática',
+          f4_desc: 'Convierte playlists y series en cursos estructurados con detección automática de módulos/lecciones, progreso y reanudación rápida.',
+          f5_title: 'Notas y Marcas de Tiempo',
+          f5_desc: 'Guarda apuntes vinculados al segundo exacto del vídeo y haz clic en el timestamp para volver al instante.',
+          f6_title: 'Modo Enfoque',
+          f6_desc: 'Oculta Shorts, recomendaciones laterales, comentarios o el feed de inicio con un clic para estudiar sin distracciones.',
+          f7_title: 'Insights',
+          f7_desc: 'Lleva un historial ilimitado de vídeos vistos en local, avance en cursos y estadísticas claras de tu biblioteca.',
+          f8_title: 'Sincronización (Chrome Sync + Drive)',
+          f8_desc: 'Almacenamiento local por defecto con opción de Chrome Sync, copia privada en Google Drive (appDataFolder) y exportación JSON.',
+          priv_kicker: 'Privacidad por defecto',
+          priv_title: 'Tus datos te pertenecen solo a ti',
+          priv_desc: 'TubeNook funciona 100% en local dentro de tu navegador, sin servidores propios, sin analíticas y sin anuncios. La sincronización con Chrome Sync o Google Drive (appDataFolder) es totalmente opcional.',
+          priv_p1: 'Cero rastreo',
+          priv_p2: 'Local-first + JSON',
+          priv_p3: 'Drive appDataFolder aislado',
+          priv_btn: 'Leer Política de Privacidad',
+          sug_title: 'Área de Sugerencias',
+          sug_desc: '¿Tienes una idea, una mejora para el Modo Cursos o encontraste un error? Envía tu sugerencia por correo o copia el mensaje listo con un clic.',
+          sug_name_label: 'Tu nombre (opcional)',
+          sug_name_ph: 'Cómo prefieres que te llamemos',
+          sug_cat_label: 'Categoría',
+          cat_feature: 'Nueva función',
+          cat_improvement: 'Mejora',
+          cat_courses: 'Modo Cursos',
+          cat_bug: 'Reportar problema',
+          cat_other: 'Otro',
+          sug_text_label: 'Tu sugerencia',
+          sug_text_ph: 'Cuéntanos cómo puede mejorar TubeNook para ti...',
+          sug_send: 'Enviar por correo',
+          sug_copy: 'Copiar mensaje / correo',
+          sug_tag: 'Sugerencia',
+          sug_opened: 'Abriendo tu cliente de correo... Si no se abre, haz clic en "Copiar mensaje / correo".',
+          sug_copied: '¡Mensaje y correo (dev@aevren.si) copiados al portapapeles!',
+          sug_empty: 'Escribe tu sugerencia antes de enviar o copiar.',
+          sug_anon: 'Anónimo',
+          coffee_kicker: 'Apoyo opcional',
+          coffee_title: '¿Te gusta TubeNook?',
+          coffee_desc: 'TubeNook es un proyecto independiente, gratuito y sin anuncios. Si la extensión te ahorra tiempo cada día, puedes invitarme a un café para apoyar futuras mejoras.',
+          coffee_btn: 'Buy Me a Coffee',
+          coffee_note: 'Todas las funciones siguen siendo 100% accesibles para todos.',
+          footer_privacy: 'Política de Privacidad',
+          footer_copy: '© 2026 TubeNook. Hecho con enfoque en privacidad.',
+          modal_priv_title: 'Política de Privacidad — TubeNook',
+          modal_priv_html: `
+            <h4>1. Almacenamiento Local-First</h4>
+            <p>Todos tus grupos de suscripciones, playlists personalizadas, cursos, notas con timestamps, historial de vistos y preferencias se guardan localmente en tu navegador mediante <code>chrome.storage.local</code>.</p>
+            <h4>2. Cero Recopilación, Cero Rastreo</h4>
+            <p>TubeNook no tiene servidores propios, no recopila telemetría ni analíticas, no muestra anuncios y nunca vende ni comparte tu actividad de navegación.</p>
+            <h4>3. Sincronización Opcional</h4>
+            <p>Puedes activar opcionalmente <strong>Chrome Sync</strong> o la copia privada en <strong>Google Drive</strong>. Al conectar Drive, TubeNook solicita únicamente el permiso restringido <code>drive.appdata</code> (carpeta oculta aislada de la app) y nunca accede a otros archivos de tu Drive.</p>
+            <h4>4. Control Total y Contacto</h4>
+            <p>Puedes exportar toda tu biblioteca en JSON o borrar todos los datos locales en cualquier momento. Contacto: <strong>dev@aevren.si</strong>.</p>
+          `
+        }
+      };
+
+      let currentLang = 'pt-BR';
+
+      function detectInitialLang() {
+        try {
+          const saved = localStorage.getItem('tubenook_site_lang');
+          if (saved && I18N[saved]) return saved;
+        } catch (_) {}
+        const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'];
+        for (const raw of langs) {
+          const lc = String(raw).toLowerCase();
+          if (lc === 'pt-br' || lc.startsWith('pt-br')) return 'pt-BR';
+          if (lc === 'pt-pt' || lc.startsWith('pt-pt')) return 'pt-PT';
+          if (lc.startsWith('pt')) return 'pt-BR';
+          if (lc.startsWith('es')) return 'es';
+          if (lc.startsWith('en')) return 'en';
+        }
+        return 'en';
+      }
+
+      function applyLang(lang) {
+        currentLang = I18N[lang] ? lang : 'en';
+        const dict = I18N[currentLang];
+        document.documentElement.lang = currentLang;
+        document.title = dict.page_title;
+
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.getAttribute('data-i18n');
+          if (dict[key] !== undefined) el.textContent = dict[key];
+        });
+
+        document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+          const key = el.getAttribute('data-i18n-placeholder');
+          if (dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+        });
+
+        document.getElementById('privacy-modal-body').innerHTML = dict.modal_priv_html;
+
+        document.querySelectorAll('.lang-btn').forEach((btn) => {
+          const active = btn.getAttribute('data-lang') === currentLang;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        try {
+          localStorage.setItem('tubenook_site_lang', currentLang);
+        } catch (_) {}
+      }
+
+      function buildSuggestionPayload() {
+        const dict = I18N[currentLang];
+        const nameInput = document.getElementById('sug-name').value.trim();
+        const catSelect = document.getElementById('sug-cat');
+        const catLabel = catSelect.options[catSelect.selectedIndex]?.textContent || catSelect.value;
+        const message = document.getElementById('sug-text').value.trim();
+
+        const subject = `[TubeNook] [${dict.sug_tag}] ${catLabel}`;
+        const bodyLines = [
+          `Name / Nome: ${nameInput || dict.sug_anon}`,
+          `Category / Categoria: ${catLabel}`,
+          `Language / Idioma: ${currentLang}`,
+          '',
+          message
+        ];
+        const body = bodyLines.join('\n');
+        return { message, subject, body };
+      }
+
+      function showFeedback(text, isError = false) {
+        const el = document.getElementById('sug-feedback');
+        el.textContent = text;
+        el.style.color = isError ? '#fb7185' : '#34d399';
+      }
+
+      // Language switcher events
+      document.querySelectorAll('.lang-btn').forEach((btn) => {
+        btn.addEventListener('click', () => applyLang(btn.getAttribute('data-lang')));
+      });
+
+      // Suggestions form submit -> mailto
+      document.getElementById('suggestion-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const dict = I18N[currentLang];
+        const { message, subject, body } = buildSuggestionPayload();
+        if (!message) {
+          showFeedback(dict.sug_empty, true);
+          return;
+        }
+        const mailtoUrl = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoUrl;
+        showFeedback(dict.sug_opened, false);
+      });
+
+      // 1-click Copy message / email fallback
+      document.getElementById('copy-suggestion-btn').addEventListener('click', async () => {
+        const dict = I18N[currentLang];
+        const { message, subject, body } = buildSuggestionPayload();
+        if (!message) {
+          showFeedback(dict.sug_empty, true);
+          return;
+        }
+        const fullText = `To: ${SUPPORT_EMAIL}\nSubject: ${subject}\n\n${body}`;
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(fullText);
+          } else {
+            const ta = document.createElement('textarea');
+            ta.value = fullText;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+          }
+          showFeedback(dict.sug_copied, false);
+        } catch (_) {
+          showFeedback(`${SUPPORT_EMAIL} — ${subject}`, false);
+        }
+      });
+
+      // Privacy modal
+      const modal = document.getElementById('privacy-modal');
+      function openModal() {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      document.getElementById('open-privacy-btn').addEventListener('click', openModal);
+      document.getElementById('footer-privacy-btn').addEventListener('click', openModal);
+      document.getElementById('close-privacy-btn').addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+      });
+
+      // Initialize
+      applyLang(detectInitialLang());
+    })();
+  </script>
+</body>
+</html>

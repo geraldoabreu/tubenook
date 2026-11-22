@@ -1,0 +1,513 @@
+/**
+ * TubeNook — YouTube Deck Mode (TweetDeck-style multi-column overlay) styles.
+ * Scoped with .tp-deck-* prefix, dark & light theme aware via shared --tp-* tokens.
+ */
+
+.tp-deck-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  background: var(--tp-bg);
+  color: var(--tp-text);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: tpFadeIn 0.16s ease-out;
+}
+
+/* Top Navigation Bar */
+.tp-deck-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 18px;
+  background: var(--tp-surface);
+  border-bottom: 1px solid var(--tp-border);
+  flex-shrink: 0;
+}
+
+.tp-deck-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tp-deck-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--tp-accent);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(239, 35, 60, 0.35);
+}
+
+.tp-deck-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tp-deck-subtitle {
+  font-size: 12px;
+  color: var(--tp-text-muted);
+}
+
+.tp-deck-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Horizontal Columns Track */
+.tp-deck-columns {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 14px;
+  padding: 14px 16px;
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tp-surface-3) transparent;
+}
+
+.tp-deck-columns::-webkit-scrollbar {
+  height: 10px;
+}
+
+.tp-deck-columns::-webkit-scrollbar-thumb {
+  background: var(--tp-surface-3);
+  border-radius: 999px;
+}
+
+/* Single Deck Column */
+.tp-deck-col {
+  flex: 0 0 auto;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  background: var(--tp-surface);
+  border: 1px solid var(--tp-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+}
+
+.tp-deck-col.is-dragging {
+  opacity: 0.45;
+  transform: scale(0.985);
+}
+
+.tp-deck-col.is-drag-over {
+  border-color: var(--tp-accent);
+  box-shadow: 0 0 0 2px var(--tp-accent-soft);
+}
+
+/* Column Header */
+.tp-deck-col-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--tp-surface-2);
+  border-bottom: 1px solid var(--tp-border);
+  flex-shrink: 0;
+}
+
+.tp-deck-col-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tp-deck-col-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  flex: 1;
+  cursor: grab;
+}
+
+.tp-deck-col-title-wrap:active {
+  cursor: grabbing;
+}
+
+.tp-deck-drag-handle {
+  color: var(--tp-text-muted);
+  font-size: 13px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.tp-deck-col-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tp-deck-col-source-tag {
+  font-size: 11px;
+  color: var(--tp-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tp-deck-col-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.tp-deck-col-actions-left,
+.tp-deck-col-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Collapsible Per-Column Filters */
+.tp-deck-col-filters {
+  padding: 10px 12px;
+  background: var(--tp-surface);
+  border-bottom: 1px solid var(--tp-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tp-deck-col-filters.is-hidden {
+  display: none;
+}
+
+.tp-deck-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tp-deck-filter-row .tp-input,
+.tp-deck-filter-row .tp-select {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.tp-deck-checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--tp-text-muted);
+}
+
+.tp-deck-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tp-deck-checkbox-label input {
+  accent-color: var(--tp-accent);
+  cursor: pointer;
+}
+
+/* Column Body (Video Stream) */
+.tp-deck-col-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tp-surface-3) transparent;
+}
+
+.tp-deck-col-body::-webkit-scrollbar {
+  width: 7px;
+}
+
+.tp-deck-col-body::-webkit-scrollbar-thumb {
+  background: var(--tp-surface-3);
+  border-radius: 999px;
+}
+
+/* Video Card */
+.tp-deck-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--tp-surface-2);
+  border: 1px solid var(--tp-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.15s ease, transform 0.12s ease, opacity 0.15s ease;
+}
+
+.tp-deck-card:hover {
+  border-color: var(--tp-border-strong);
+  transform: translateY(-1px);
+}
+
+.tp-deck-card.is-watched {
+  opacity: 0.58;
+}
+
+.tp-deck-thumb-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000000;
+  overflow: hidden;
+}
+
+.tp-deck-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tp-deck-duration-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.82);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.tp-deck-shorts-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--tp-accent);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tp-deck-watched-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(22, 163, 74, 0.92);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tp-deck-card-info {
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.tp-deck-card-title {
+  color: var(--tp-text);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tp-deck-card-title:hover {
+  color: var(--tp-accent);
+}
+
+.tp-deck-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--tp-text-muted);
+}
+
+.tp-deck-card-channel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.tp-deck-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.tp-deck-card-stats {
+  font-size: 11px;
+  color: var(--tp-text-muted);
+}
+
+.tp-deck-watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--tp-border);
+  background: var(--tp-surface);
+  color: var(--tp-text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.tp-deck-watch-btn:hover {
+  border-color: var(--tp-success);
+  color: var(--tp-success);
+}
+
+.tp-deck-watch-btn.is-watched {
+  background: var(--tp-success-soft);
+  border-color: var(--tp-success);
+  color: var(--tp-success);
+}
+
+/* Community Channel Card */
+.tp-deck-community-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--tp-surface-2);
+  border: 1px solid var(--tp-border);
+}
+
+.tp-deck-community-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tp-deck-community-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--tp-surface-3);
+  flex-shrink: 0;
+}
+
+.tp-deck-community-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tp-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tp-deck-community-sub {
+  font-size: 11px;
+  color: var(--tp-text-muted);
+}
+
+/* States: Loading, Empty, Error */
+.tp-deck-state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 32px 18px;
+  color: var(--tp-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.tp-deck-spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--tp-surface-3);
+  border-top-color: var(--tp-accent);
+  border-radius: 50%;
+  animation: tpSpin 0.7s linear infinite;
+}
+
+@keyframes tpSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Empty Deck Placeholder */
+.tp-deck-empty-board {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 40px;
+  color: var(--tp-text-muted);
+}
+
+/* Add / Edit Column Modal Width Selector */
+.tp-deck-width-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.tp-deck-width-btn {
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--tp-border);
+  background: var(--tp-surface-2);
+  color: var(--tp-text);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tp-deck-width-btn.is-selected {
+  border-color: var(--tp-accent);
+  background: var(--tp-accent-soft);
+  color: var(--tp-accent);
+}

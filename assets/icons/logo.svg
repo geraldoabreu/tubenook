@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="TubeNook Logo">
+  <defs>
+    <!-- Deep obsidian-indigo background -->
+    <linearGradient id="tn-bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#141628"/>
+      <stop offset="100%" stop-color="#1E1B3A"/>
+    </linearGradient>
+    <!-- Coral to Indigo brand gradient -->
+    <linearGradient id="tn-brand" x1="16" y1="16" x2="112" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF4F64"/>
+      <stop offset="52%" stop-color="#D9468F"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+    <!-- Warm coral-amber accent for shelf spines -->
+    <linearGradient id="tn-spine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7A8A"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <!-- Subtle top sheen -->
+    <radialGradient id="tn-sheen" cx="28%" cy="20%" r="65%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer rounded-square emblem -->
+  <rect x="6" y="6" width="116" height="116" rx="28" fill="url(#tn-bg)"/>
+  <rect x="6" y="6" width="116" height="116" rx="28" fill="url(#tn-sheen)"/>
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="none" stroke="url(#tn-brand)" stroke-width="4" opacity="0.9"/>
+
+  <!-- Cozy bookshelf / nook frame (rounded niche) -->
+  <rect x="24" y="26" width="80" height="66" rx="16" fill="url(#tn-brand)"/>
+
+  <!-- Left nook book spines (organizer / playlist shelves) -->
+  <rect x="33" y="36" width="8" height="46" rx="4" fill="#141628" opacity="0.28"/>
+  <rect x="45" y="42" width="7" height="40" rx="3.5" fill="#141628" opacity="0.22"/>
+
+  <!-- Crisp Play Triangle nestled inside the nook -->
+  <path d="M62 43.5 C62 40.8 64.9 39.2 67.2 40.6 L91.8 55.6 C94.0 56.9 94.0 60.1 91.8 61.4 L67.2 76.4 C64.9 77.8 62 76.2 62 73.5 Z" fill="#FFFFFF"/>
+
+  <!-- Cozy bottom bookshelf ledge -->
+  <rect x="24" y="98" width="80" height="8" rx="4" fill="url(#tn-spine)" opacity="0.95"/>
+</svg>

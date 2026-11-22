@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TubeNook</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup-app" id="popup-app">
+    <header class="popup-header">
+      <div class="popup-brand">
+        <img class="popup-logo-img" src="../../assets/icons/icon32.png" alt="TubeNook" width="28" height="28" />
+        <div>
+          <h1 class="popup-title" id="ui-brand-name">TubeNook</h1>
+          <div class="popup-tagline" id="ui-tagline">YouTube Manager</div>
+        </div>
+      </div>
+      <select id="popup-language" class="lang-select" aria-label="Language">
+        <option value="pt-BR">Português (Brasil)</option>
+        <option value="pt-PT">Português (Portugal)</option>
+        <option value="en">English</option>
+        <option value="es">Español</option>
+      </select>
+    </header>
+
+    <div class="sync-status-pill is-hidden" id="sync-status-pill" aria-live="polite">
+      <span class="sync-status-dot" aria-hidden="true"></span>
+      <span id="sync-status-text"></span>
+    </div>
+
+    <section class="stats-grid" aria-label="Summary">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-groups">0</div>
+        <div class="stat-label" id="lbl-groups">Grupos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-channels">0</div>
+        <div class="stat-label" id="lbl-channels">Canais</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-courses">0</div>
+        <div class="stat-label" id="lbl-courses">Cursos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-watched">0</div>
+        <div class="stat-label" id="lbl-watched">Assistidos</div>
+      </div>
+    </section>
+
+    <section class="search-section">
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input type="text" id="quick-search" class="search-input" placeholder="Buscar grupos ou canais..." autocomplete="off" />
+      </div>
+      <div class="search-results is-hidden" id="search-results"></div>
+    </section>
+
+    <section class="toggles-section">
+      <div class="section-title" id="lbl-quick-toggles">Ajustes Rápidos</div>
+      <label class="toggle-row">
+        <span class="toggle-text" id="lbl-focus-mode">Modo Foco</span>
+        <input type="checkbox" class="toggle-input" id="toggle-focus-mode" />
+        <span class="toggle-slider"></span>
+      </label>
+      <label class="toggle-row">
+        <span class="toggle-text" id="lbl-hide-watched">Ocultar assistidos globalmente</span>
+        <input type="checkbox" class="toggle-input" id="toggle-hide-watched" />
+        <span class="toggle-slider"></span>
+      </label>
+      <label class="toggle-row">
+        <span class="toggle-text" id="lbl-hide-shorts">Ocultar Shorts globalmente</span>
+        <input type="checkbox" class="toggle-input" id="toggle-hide-shorts" />
+        <span class="toggle-slider"></span>
+      </label>
+      <label class="toggle-row">
+        <span class="toggle-text" id="lbl-auto-tag">Auto-tagging de canais</span>
+        <input type="checkbox" class="toggle-input" id="toggle-auto-tag" />
+        <span class="toggle-slider"></span>
+      </label>
+      <label class="toggle-row">
+        <span class="toggle-text" id="lbl-shortcuts">Atalhos de teclado</span>
+        <input type="checkbox" class="toggle-input" id="toggle-shortcuts" />
+        <span class="toggle-slider"></span>
+      </label>
+    </section>
+
+    <footer class="actions-section">
+      <button type="button" class="action-btn action-btn-primary" id="btn-open-manager">
+        <span>📂</span>
+        <span id="lbl-open-manager">Abrir Gerenciador no YouTube</span>
+      </button>
+      <div class="actions-row-2">
+        <button type="button" class="action-btn action-btn-secondary" id="btn-open-courses">
+          <span>🎓</span>
+          <span id="lbl-open-courses">Cursos</span>
+        </button>
+        <button type="button" class="action-btn action-btn-secondary" id="btn-open-insights">
+          <span>📊</span>
+          <span id="lbl-open-insights">Insights</span>
+        </button>
+      </div>
+      <button type="button" class="action-btn action-btn-secondary" id="btn-open-deck">
+        <span>📺</span>
+        <span id="lbl-open-deck">Abrir Modo Deck no YouTube</span>
+      </button>
+      <button type="button" class="action-btn action-btn-ghost" id="btn-open-options">
+        <span>⚙️</span>
+        <span id="lbl-open-options">Configurações &amp; Backup</span>
+      </button>
+      <div class="popup-footer-support">
+        <a
+          id="link-support-project"
+          class="support-link"
+          href="https://buymeacoffee.com/aevren"
+          target="_blank"
+          rel="noopener noreferrer"
+        >☕ Apoiar o projeto</a>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

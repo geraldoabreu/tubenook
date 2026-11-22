@@ -1,0 +1,23 @@
+{
+  "name": "tubenook",
+  "version": "1.0.0",
+  "description": "TubeNook — YouTube Subscriptions, Playlists, Deck & Courses Organizer",
+  "type": "module",
+  "scripts": {
+    "icons": "node scripts/generate-icons.mjs",
+    "build": "node scripts/build.mjs",
+    "package": "node scripts/package.mjs",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "youtube",
+    "tubenook",
+    "subscriptions",
+    "playlists",
+    "courses",
+    "deck",
+    "manifest-v3"
+  ],
+  "license": "MIT"
+}
