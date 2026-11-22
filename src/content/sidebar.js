@@ -312,11 +312,25 @@ function buildSidebarHtml(state) {
         </ul>`
       : `<div class="tp-sidebar-empty">${escapeHtml(coursesEmptyText)}</div>`;
 
+  const brandLogoSvg = `<svg class="tp-brand-svg" viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
+    <defs>
+      <linearGradient id="tpNookGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#ff4d6d"/>
+        <stop offset="55%" stop-color="#ef233c"/>
+        <stop offset="100%" stop-color="#6366f1"/>
+      </linearGradient>
+    </defs>
+    <rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="url(#tpNookGrad)"/>
+    <rect x="6" y="7" width="3" height="14" rx="1.5" fill="rgba(255,255,255,0.9)"/>
+    <path d="M13 8.8 L24 14.5 L13 20.2 Z" fill="#ffffff"/>
+    <rect x="6" y="23" width="20" height="2.4" rx="1.2" fill="rgba(255,255,255,0.85)"/>
+  </svg>`;
+
   return `
     <div class="tp-sidebar-inner">
-      <div class="tp-sidebar-header">
+      <div class="tp-sidebar-header tp-sidebar-brand-card">
         <div class="tp-sidebar-brand">
-          <span class="tp-brand-dot"></span>
+          ${brandLogoSvg}
           <span class="tp-brand-title">${escapeHtml(BRAND_NAME)}</span>
         </div>
         <div class="tp-sidebar-header-actions">
@@ -326,16 +340,20 @@ function buildSidebarHtml(state) {
         </div>
       </div>
 
-      <!-- Prominent Top-Level Deck Item -->
-      <div class="tp-sb-deck-wrap">
-        <button type="button" class="tp-sb-deck-btn" data-tp-action="open-deck" title="${escapeHtml(t('sidebar.openDeck', lang))}">
-          <span class="tp-sb-deck-ico" aria-hidden="true">📺</span>
-          <span class="tp-sb-deck-label">${escapeHtml(deckLabel)}</span>
-          <span class="tp-sb-deck-arrow" aria-hidden="true">›</span>
-        </button>
+      <!-- Uniform Top-Level Item: Deck (with › arrow instead of +) -->
+      <div class="tp-sb-group tp-sb-group-deck">
+        <div class="tp-sb-group-head">
+          <button type="button" class="tp-sb-group-toggle" data-tp-action="open-deck" title="${escapeHtml(t('sidebar.openDeck', lang))}">
+            <span class="tp-sb-chevron tp-sb-deck-glyph" aria-hidden="true">📺</span>
+            <span class="tp-sb-group-title">${escapeHtml(deckLabel)}</span>
+          </button>
+          <div class="tp-sb-group-btns">
+            <button type="button" class="tp-mini-add-btn tp-mini-arrow-btn" data-tp-action="open-deck" title="${escapeHtml(t('sidebar.openDeck', lang))}" aria-label="${escapeHtml(t('sidebar.openDeck', lang))}">›</button>
+          </div>
+        </div>
       </div>
 
-      <!-- Section 1: Grupos de Inscrições (Flat) -->
+      <!-- Section 1: Inscrições (Flat) -->
       <div class="tp-sb-group ${subsCollapsed ? 'tp-sb-collapsed' : ''}">
         <div class="tp-sb-group-head">
           <button type="button" class="tp-sb-group-toggle" data-tp-toggle-section="subs" aria-expanded="${!subsCollapsed}">

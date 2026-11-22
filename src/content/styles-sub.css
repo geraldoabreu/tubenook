@@ -267,16 +267,40 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.tp-sidebar-brand-card {
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--tp-border);
+  background: var(--tp-bg-elevated);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
 }
 
 .tp-sidebar-brand {
   display: flex;
   align-items: center;
-  gap: 7px;
-  font-size: 14px;
+  gap: 8px;
+  font-size: 14.5px;
   font-weight: 700;
   letter-spacing: 0.2px;
+}
+
+.tp-brand-svg {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+
+.tp-sb-deck-glyph {
+  font-size: 13px;
+}
+
+.tp-mini-arrow-btn {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .tp-sidebar-actions {

@@ -23,7 +23,7 @@ Transforme o YouTube em um espaço organizado, calmo e produtivo com o **TubeNoo
 Chega de se perder em centenas de canais inscritos, playlists bagunçadas ou aulas soltas. O TubeNook adiciona uma camada completa de organização diretamente dentro do YouTube — sem rastreamento, sem anúncios e com seus dados sob seu controle.
 
 #### Principais recursos
-- **Grupos de Inscrições e Pastas Aninhadas:** Agrupe seus canais em coleções, subpastas, cores e ícones personalizados diretamente na barra lateral do YouTube.
+- **Inscrições Organizadas:** Agrupe seus canais em coleções com cores e ícones personalizados diretamente na barra lateral do YouTube.
 - **Listas de Reprodução Personalizadas:** Crie e gerencie coleções locais de vídeos com filtros por duração, status de visualização, canal e tags.
 - **YouTube Deck:** Visualize múltiplos grupos, canais e filas lado a lado em um painel em colunas estilo TweetDeck.
 - **Modo Cursos com Organização Automática:** Transforme playlists e séries em cursos estruturados com detecção automática de módulos/aulas, barra de progresso, marcação de aulas concluídas e retomada rápida.
@@ -56,7 +56,7 @@ Transforme o YouTube num espaço organizado, calmo e produtivo com o **TubeNook*
 Deixe de se perder entre centenas de canais subscritos, listas de reprodução desorganizadas ou aulas dispersas. O TubeNook integra uma camada completa de organização diretamente no YouTube — sem rastreamento, sem anúncios e com total controlo sobre os seus dados.
 
 #### Funcionalidades principais
-- **Grupos de Subscrições e Pastas Aninhadas:** Organize os seus canais em coleções, subpastas, cores e ícones personalizados diretamente na barra lateral do YouTube.
+- **Subscrições Organizadas:** Organize os seus canais em coleções com cores e ícones personalizados diretamente na barra lateral do YouTube.
 - **Listas de Reprodução Personalizadas:** Crie e gira coleções locais de vídeos com filtros por duração, estado de visualização, canal e etiquetas.
 - **YouTube Deck:** Acompanhe vários grupos, canais e filas lado a lado num painel em colunas estilo Deck.
 - **Modo Cursos com Organização Automática:** Converta playlists e séries em cursos estruturados com deteção automática de módulos/aulas, progresso detalhado e retoma imediata.
@@ -81,7 +81,7 @@ Deixe de se perder entre centenas de canais subscritos, listas de reprodução d
 `TubeNook — YouTube Subscriptions, Playlists, Deck & Courses`
 
 ### Short Description (126 / 132 characters)
-`Organize YouTube subscriptions, playlists & courses with nested folders, Deck view, timestamp notes & Focus Mode. Local-first.`
+`Organize YouTube subscriptions, playlists & courses with custom layouts, Deck view, timestamp notes & Focus Mode. Local-first.`
 
 ### Full Description
 Turn YouTube into a calm, structured workspace for learning and watching with **TubeNook**.
@@ -89,7 +89,7 @@ Turn YouTube into a calm, structured workspace for learning and watching with **
 Stop losing track of channels across endless subscription lists, cluttered playlists, and multi-part tutorials. TubeNook integrates natively into YouTube with a fast, local-first toolkit — zero tracking, zero ads, and full ownership of your data.
 
 #### Key Features
-- **Subscription Groups & Nested Folders:** Organize channels into custom folders, sub-folders, colors, and icons right inside YouTube's sidebar.
+- **Organized Subscriptions:** Group channels into custom collections with colors and icons right inside YouTube's sidebar.
 - **Custom Playlists & Smart Filters:** Build custom video collections and filter by duration, watched status, channel, Shorts, or tags.
 - **YouTube Deck:** Browse multiple channel groups, playlists, and queues side-by-side in a multi-column Deck dashboard.
 - **Courses Mode with Auto-Organization:** Turn any playlist or series into a structured course with automatic module/lesson grouping, completion checkboxes, progress tracking, and instant resume.

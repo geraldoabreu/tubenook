@@ -401,7 +401,7 @@ function renderDeck() {
   overlayEl.innerHTML = `
     <header class="tp-deck-topbar">
       <div class="tp-deck-brand">
-        <span class="tp-deck-logo" title="${escapeHtml(BRAND_NAME)}">TN</span>
+        <span class="tp-deck-logo" title="${escapeHtml(BRAND_NAME)}"><svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><defs><linearGradient id="tpDeckGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="55%" stop-color="#ef233c"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="url(#tpDeckGrad)"/><rect x="6" y="7" width="3" height="14" rx="1.5" fill="rgba(255,255,255,0.9)"/><path d="M13 8.8 L24 14.5 L13 20.2 Z" fill="#ffffff"/><rect x="6" y="23" width="20" height="2.4" rx="1.2" fill="rgba(255,255,255,0.85)"/></svg></span>
         <div>
           <h1 class="tp-deck-title">${escapeHtml(t('deck.title', lang))}</h1>
           <div class="tp-deck-subtitle">${columns.length} ${lang === 'pt-BR' ? 'colunas' : 'columns'}</div>
