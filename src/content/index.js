@@ -62,20 +62,12 @@ let pendingState = null;
 let stateRafId = null;
 
 /**
- * Idempotently inject all TubeNook content stylesheets into document.head.
+ * Stylesheets are declared natively in manifest.json content_scripts.css
+ * so Chromium/Opera injects them in the isolated world with zero cross-origin
+ * chrome-extension:// <link> errors.
  */
 function injectStylesheets() {
-  if (typeof document === 'undefined' || !chrome?.runtime?.getURL) return;
-  const head = document.head || document.documentElement;
-  for (const relPath of STYLESHEETS) {
-    const id = `tp-style-${relPath.replace(/[^a-z0-9]/gi, '-')}`;
-    if (document.getElementById(id)) continue;
-    const link = document.createElement('link');
-    link.id = id;
-    link.rel = 'stylesheet';
-    link.href = chrome.runtime.getURL(relPath);
-    head.appendChild(link);
-  }
+  // No-op: handled natively by Manifest V3 content_scripts.css
 }
 
 /**

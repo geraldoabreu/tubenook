@@ -42,10 +42,14 @@
         "*://*.youtube.com/*"
       ],
       "js": [
-        "src/content/loader.js"
+        "src/content/content.bundle.js"
       ],
       "css": [
-        "src/content/styles.css"
+        "src/content/styles.css",
+        "src/content/styles-sub.css",
+        "src/content/styles-playlist.css",
+        "src/content/styles-deck.css",
+        "src/content/styles-courses.css"
       ],
       "run_at": "document_idle"
     }
@@ -53,8 +57,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "src/content/*",
-        "src/shared/*",
         "assets/*"
       ],
       "matches": [
