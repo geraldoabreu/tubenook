@@ -5,6 +5,16 @@ All notable changes to **TubeNook** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-11-24
+
+### Added
+- **Unified Playlist & Subscription Editor**: Creating and customizing playlists now uses the exact same Manager modal workflow (Name, Color swatches, 110+ searchable icons, Custom image upload) as Subscriptions.
+- **Automated i18n Key Audit Test**: Static regression test verifying 0 missing translation keys across `src/**/*.{js,html}` in all 4 locales (`pt-BR`, `pt-PT`, `en`, `es`).
+
+### Changed
+- **MV3 Single-Bundle Content Script & Native CSS**: Bundled content script into `dist/src/content/content.bundle.js` and declared all 5 stylesheets natively in `manifest.json` to eliminate cross-origin `chrome-extension://` errors in Chrome and Opera.
+- **Sidebar & Deck Polish**: Elevated `TubeNook` brand header with official inline SVG icon, unified `Deck`, `Inscrições`, `Listas de reprodução`, and `Cursos` sidebar items, fixed Deck flex card sizing, and repositioned the Shorts quick bar to top-right so it never overlaps the timeline scrubber.
+
 ## [1.0.0] - 2026-11-22
 
 ### Added

@@ -233,7 +233,7 @@ export async function boot() {
     onSelectSubscriptionGroup: (groupId) => openGroupFeed(groupId),
     onSelectPlaylistGroup: (groupId) => openPlaylistGroupView(groupId),
     onOpenCustomPlaylist: (playlistId) => openCustomPlaylistView(playlistId),
-    onCustomizePlaylist: (playlistId) => openPlaylistCustomizeModal(playlistId),
+    onCustomizePlaylist: (playlistId) => openManagerModal('playlists', { editPlaylistId: playlistId }),
     onOpenCourses: () => openCoursesModal(),
     onOpenInsights: () => openInsightsModal(),
   });

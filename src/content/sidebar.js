@@ -517,36 +517,7 @@ function bindSidebarEvents(sectionEl) {
       } else if (action === 'create-sub-group') {
         callbacks.onOpenManager?.('groups', { createKind: GROUP_KINDS.SUBSCRIPTION });
       } else if (action === 'create-custom-playlist') {
-        const lang = currentState?.settings?.language || 'pt-BR';
-        const promptLabel =
-          lang === 'pt-BR' ? 'Nome da nova playlist personalizada:' : 'New custom playlist name:';
-        const rawName = window.prompt(promptLabel, '');
-        const title = (rawName || '').trim();
-        if (!title) return;
-        const newId = createId('pl');
-        const res = await sendBg(MESSAGE_ACTIONS.UPSERT_PLAYLISTS, {
-          playlists: [
-            {
-              id: newId,
-              title,
-              isCustom: true,
-              videos: [],
-              videoCount: 0,
-              watchedCount: 0,
-              groupIds: [],
-              thumbnailUrl: '',
-              updatedAt: Date.now(),
-            },
-          ],
-        });
-        if (res?.ok && res.state) {
-          currentState = res.state;
-          refreshSidebar(res.state);
-          showToast(t('toast.saved', lang), 'success');
-          callbacks.onOpenCustomPlaylist?.(newId);
-        } else if (res?.error) {
-          showToast(t('toast.error', lang, { message: res.error }), 'error');
-        }
+        callbacks.onOpenManager?.('playlists', { createPlaylist: true });
       }
     }
   });

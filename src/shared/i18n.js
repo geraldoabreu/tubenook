@@ -32,6 +32,10 @@ export const TRANSLATIONS = Object.freeze({
     // Sidebar & Groups
     'sidebar.title': 'TubeNook',
     'sidebar.subscriptionGroups': 'Inscrições',
+    'playlists.title': 'Listas de reprodução',
+    'playlists.newCustom': 'Nova Playlist',
+    'channels.title': 'Canais',
+    'community.title': 'Comunidade',
     'sidebar.playlistGroups': 'Grupos de Playlists',
     'sidebar.newGroup': 'Novo Grupo',
     'sidebar.newSubgroup': 'Novo Subgrupo',
@@ -335,6 +339,10 @@ export const TRANSLATIONS = Object.freeze({
     // Sidebar & Groups
     'sidebar.title': 'TubeNook',
     'sidebar.subscriptionGroups': 'Subscrições',
+    'playlists.title': 'Listas de reprodução',
+    'playlists.newCustom': 'Nova Lista de Reprodução',
+    'channels.title': 'Canais',
+    'community.title': 'Comunidade',
     'sidebar.playlistGroups': 'Grupos de Listas de Reprodução',
     'sidebar.newGroup': 'Novo Grupo',
     'sidebar.newSubgroup': 'Novo Subgrupo',
@@ -638,6 +646,10 @@ export const TRANSLATIONS = Object.freeze({
     // Sidebar & Groups
     'sidebar.title': 'TubeNook',
     'sidebar.subscriptionGroups': 'Subscriptions',
+    'playlists.title': 'Playlists',
+    'playlists.newCustom': 'New Playlist',
+    'channels.title': 'Channels',
+    'community.title': 'Community',
     'sidebar.playlistGroups': 'Playlist Groups',
     'sidebar.newGroup': 'New Group',
     'sidebar.newSubgroup': 'New Subgroup',
@@ -941,6 +953,10 @@ export const TRANSLATIONS = Object.freeze({
     // Sidebar & Groups
     'sidebar.title': 'TubeNook',
     'sidebar.subscriptionGroups': 'Suscripciones',
+    'playlists.title': 'Listas de reproducción',
+    'playlists.newCustom': 'Nueva Lista',
+    'channels.title': 'Canales',
+    'community.title': 'Comunidad',
     'sidebar.playlistGroups': 'Grupos de Listas de Reproducción',
     'sidebar.newGroup': 'Nuevo Grupo',
     'sidebar.newSubgroup': 'Nuevo Subgrupo',
