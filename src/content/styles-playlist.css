@@ -2224,9 +2224,12 @@ ytd-playlist-video-renderer:hover .tp-pl-row-trash-btn,
 
 .tp-watch-quickbar-shorts {
   position: fixed;
-  left: 50%;
-  bottom: 16px;
-  transform: translateX(-50%);
+  top: 68px;
+  right: 20px;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  max-width: calc(100vw - 40px);
   z-index: 2147482900;
   margin: 0;
   box-shadow: var(--tp-pl-shadow);

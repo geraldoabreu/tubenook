@@ -2,19 +2,19 @@
 
 **TubeNook** is a Manifest V3 Chrome Extension that transforms YouTube into a clean, organized workspace for your subscriptions, playlists, and courses.
 
-Organize channels and playlists into nested folders, browse updates in a multi-column Deck view, auto-tag videos, track unlimited watch history and course progress, filter out distractions with Focus Mode, and sync your setup across devices via Chrome Sync or Google Drive.
+Organize channels into topic collections, customize every playlist's icon/color/cover inside TubeNook, browse updates in a multi-column Deck view, study with Courses Mode & timestamped notes, filter out distractions with Focus Mode, and sync your setup across devices via Chrome Sync or Google Drive.
 
 ## Features
 
-- **Nested Folders for Subscriptions & Playlists** — Group your YouTube channels and playlists into customizable folders with icons, colors, and sub-folders directly inside the YouTube sidebar.
-- **Multi-Column Deck View** — View and filter recent uploads across multiple folders side-by-side without endless scrolling.
-- **Playlist Customization & Indexing** — Customize playlist metadata, organize playlists into folders, and navigate large libraries smoothly.
-- **Course & Study Mode** — Track progress across educational playlists with unlimited watched video tracking and custom status labels.
-- **Auto-Tagging & Advanced Filters** — Automatically categorize channels and videos by rules, and filter by duration, Shorts, watch status, or custom tags.
-- **Focus Mode** — Reduce YouTube distractions when you want to watch or study intentionally.
-- **Insights & Analytics** — Understand your subscription activity and watch progress at a glance.
-- **Cloud Sync & Backup** — Keep folders, tags, watch progress, and preferences (`language`, `focusMode`, `statusConfig`) synced via **Chrome Sync**, **Google Drive**, or JSON import/export.
-- **Zero External Tracking** — All data stays locally in your browser or your own cloud storage.
+- **Organized Subscriptions** — Group your YouTube channels into flat, customizable collections with icons, colors, and custom images directly inside the YouTube sidebar while keeping YouTube's native "You" and "Subscriptions" sections clean.
+- **Customizable Playlists (Native + Custom)** — View and customize the layout (icon, color, cover image) of ALL your YouTube playlists inside TubeNook using the exact same unified editor as Subscriptions, with 1-click Save-to-Playlist modal injection, Watch/Shorts quick bar, multi-select bulk actions, duration & watched `%` stats, and 1-click row actions.
+- **Multi-Column Deck View** — View and filter recent uploads across multiple subscription groups, channels, and playlists side-by-side without endless scrolling.
+- **Courses Mode with Auto-Sequencing** — Turn any playlist or set of videos into a structured course with automatic module/lesson ordering, completion checkboxes, next/previous lesson navigation, and progress tracking.
+- **Notes & Timestamps** — Take study notes linked to exact video timestamps and jump back with a single click.
+- **Auto-Tagging, Smart Rules & Advanced Filters** — Automatically categorize channels by rules, filter by unlimited tags (AND/OR/Exclude), duration, Shorts, or watch status, and hide distracting keywords.
+- **Focus Mode & Library Insights** — Hide YouTube distractions with 1 click and monitor watch time, channel health, and course progress.
+- **Lightweight MV3 Performance** — Single bundled content script + native MV3 CSS injection, scoped observers, and zero external tracking.
+- **Cloud Sync & Backup** — Keep collections, playlists, courses, notes, watch progress, and preferences (`language`, `focusMode`, `statusConfig`) synced via **Chrome Sync**, **Google Drive (`appDataFolder`)**, or JSON/CSV export & import.
 
 ## Supported Languages
 
@@ -37,7 +37,7 @@ Install **TubeNook** directly from the Chrome Web Store *(link coming soon upon 
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/aevren/tubenook.git
+   git clone https://github.com/geraldoabreu/tubenook.git
    cd tubenook
    ```
 2. Build the extension:

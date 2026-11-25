@@ -17,6 +17,7 @@ import {
   SORT_OPTIONS,
   MESSAGE_ACTIONS,
   DEFAULT_STATUS_CONFIG,
+  createId,
 } from '../shared/types.js';
 import {
   getGroupTree,
@@ -111,9 +112,10 @@ const groupFeedState = {
 /** Manager Modal UI state */
 const modalState = {
   open: false,
-  tab: 'groups', // 'groups' | 'channels' | 'community'
-  // Groups tab
+  tab: 'groups', // 'groups' | 'playlists' | 'channels' | 'community'
+  // Groups & Playlists shared editor form
   editingGroupId: null,
+  editingPlaylistId: null,
   groupFormKind: GROUP_KINDS.SUBSCRIPTION,
   groupFormName: '',
   groupFormParentId: '',
@@ -122,6 +124,7 @@ const modalState = {
   iconSearch: '',
   iconCategory: 'all',
   showGroupForm: false,
+  showPlaylistForm: false,
   // Channels tab
   channelSearch: '',
   channelStatusFilter: 'all',
@@ -2088,14 +2091,42 @@ async function openWatchChannelGroupPopover(anchorEl) {
 
 /**
  * Open the Full Manager Modal on the requested tab.
- * @param {'groups' | 'channels' | 'community'} [initialTab='groups']
- * @param {{ createKind?: 'subscription' | 'playlist', editGroupId?: string }} [options={}]
+ * @param {'groups' | 'playlists' | 'channels' | 'community'} [initialTab='groups']
+ * @param {{ createKind?: 'subscription' | 'playlist', editGroupId?: string, createPlaylist?: boolean, editPlaylistId?: string }} [options={}]
  */
 export function openManagerModal(initialTab = 'groups', options = {}) {
   modalState.open = true;
   modalState.tab = initialTab || 'groups';
 
-  if (options?.createKind) {
+  if (options?.createPlaylist) {
+    modalState.tab = 'playlists';
+    modalState.showPlaylistForm = true;
+    modalState.editingPlaylistId = null;
+    modalState.groupFormName = '';
+    modalState.groupFormColor = DEFAULT_GROUP_COLORS[0];
+    modalState.groupFormIcon = { type: 'emoji', value: '🎵' };
+    modalState.iconSearch = '';
+    modalState.iconCategory = 'all';
+  } else if (options?.editPlaylistId) {
+    const st = stateNow();
+    const pl = st?.playlists?.[options.editPlaylistId];
+    modalState.tab = 'playlists';
+    modalState.showPlaylistForm = true;
+    modalState.editingPlaylistId = options.editPlaylistId;
+    modalState.groupFormName = pl?.title || '';
+    modalState.groupFormColor = pl?.color || DEFAULT_GROUP_COLORS[0];
+    if (pl?.customThumbnailUrl) {
+      modalState.groupFormIcon = { type: 'custom', value: pl.customThumbnailUrl };
+    } else if (pl?.icon && typeof pl.icon === 'object' && pl.icon.type && pl.icon.value) {
+      modalState.groupFormIcon = pl.icon;
+    } else if (typeof pl?.icon === 'string' && pl.icon) {
+      modalState.groupFormIcon = { type: 'emoji', value: pl.icon };
+    } else {
+      modalState.groupFormIcon = { type: 'emoji', value: '🎵' };
+    }
+    modalState.iconSearch = '';
+    modalState.iconCategory = 'all';
+  } else if (options?.createKind) {
     modalState.tab = 'groups';
     modalState.showGroupForm = true;
     modalState.editingGroupId = null;
@@ -2177,72 +2208,14 @@ function renderGroupsTab(state, lang) {
   const icons = searchIcons(modalState.iconSearch, modalState.iconCategory);
 
   const formHtml = modalState.showGroupForm
-    ? `
-      <div class="tp-card tp-group-form">
-        <div class="tp-form-header">
-          <h3>${escapeHtml(modalState.editingGroupId ? t('group.editTitle', lang) : t('group.createTitle', lang))}</h3>
-          <button type="button" class="tp-icon-btn" data-tp-grp-form="cancel">✕</button>
-        </div>
-
-        <div class="tp-form-grid">
-          <label class="tp-field">
-            <span>${escapeHtml(t('group.nameLabel', lang))}</span>
-            <input type="text" class="tp-input" data-tp-grp-input="groupFormName" value="${escapeHtml(modalState.groupFormName)}" placeholder="${escapeHtml(t('group.namePlaceholder', lang))}" />
-          </label>
-        </div>
-
-        <div class="tp-field">
-          <span>${escapeHtml(t('group.colorLabel', lang))}</span>
-          <div class="tp-color-swatches">
-            ${DEFAULT_GROUP_COLORS.map(
-              (c) =>
-                `<button type="button" class="tp-swatch ${modalState.groupFormColor === c ? 'tp-swatch-active' : ''}" style="background:${c}" data-tp-pick-color="${c}" aria-label="${c}"></button>`
-            ).join('')}
-            <input type="color" class="tp-color-input" data-tp-grp-input="groupFormColor" value="${escapeHtml(modalState.groupFormColor)}" />
-          </div>
-        </div>
-
-        <div class="tp-field">
-          <div class="tp-icon-picker-head">
-            <span>${escapeHtml(t('group.iconLabel', lang))} <span class="tp-icon-preview" style="color:${escapeHtml(modalState.groupFormColor)}">${renderIconHtml(modalState.groupFormIcon, 22)}</span></span>
-            <label class="tp-btn tp-btn-sm tp-upload-label">
-              📤 ${escapeHtml(t('group.iconUpload', lang))}
-              <input type="file" accept="image/*" id="tp-custom-icon-upload" hidden />
-            </label>
-          </div>
-
-          <input type="search" class="tp-input tp-input-sm" data-tp-grp-input="iconSearch" value="${escapeHtml(modalState.iconSearch)}" placeholder="${escapeHtml(t('group.iconSearch', lang))}" />
-
-          <div class="tp-icon-cats">
-            ${ICON_CATEGORIES.map(
-              (cat) => `
-              <button type="button" class="tp-pill tp-pill-xs ${modalState.iconCategory === cat.id ? 'tp-pill-active' : ''}" data-tp-icon-cat="${escapeHtml(cat.id)}">
-                ${escapeHtml(lang === 'pt-BR' ? cat.labelPt : cat.labelEn)}
-              </button>`
-            ).join('')}
-          </div>
-
-          <div class="tp-icon-grid">
-            ${icons
-              .map((ic) => {
-                const isSel =
-                  modalState.groupFormIcon?.type === ic.type &&
-                  modalState.groupFormIcon?.value === ic.value;
-                return `
-                  <button type="button" class="tp-icon-choice ${isSel ? 'tp-icon-choice-active' : ''}" data-tp-pick-icon-type="${escapeHtml(ic.type)}" data-tp-pick-icon-id="${escapeHtml(ic.id)}" title="${escapeHtml(lang === 'pt-BR' ? ic.labelPt : ic.labelEn)}">
-                    ${renderIconHtml({ type: ic.type, value: ic.value }, 20)}
-                  </button>`;
-              })
-              .join('')}
-          </div>
-        </div>
-
-        <div class="tp-form-actions">
-          <button type="button" class="tp-btn" data-tp-grp-form="cancel">${escapeHtml(t('common.cancel', lang))}</button>
-          <button type="button" class="tp-btn tp-btn-primary" data-tp-grp-form="save">${escapeHtml(t('common.save', lang))}</button>
-        </div>
-      </div>
-    `
+    ? renderUnifiedIconColorForm({
+        titleText: modalState.editingGroupId ? t('group.editTitle', lang) : t('group.createTitle', lang),
+        nameLabel: t('group.nameLabel', lang),
+        namePlaceholder: t('group.namePlaceholder', lang),
+        formAttr: 'data-tp-grp-form',
+        icons,
+        lang,
+      })
     : '';
 
   return `
@@ -2259,6 +2232,169 @@ function renderGroupsTab(state, lang) {
       ${
         subGroups.length > 0
           ? renderFlatGroupList(subGroups)
+          : `<div class="tp-muted tp-small">${escapeHtml(t('common.empty', lang))}</div>`
+      }
+    </section>
+  `;
+}
+
+/**
+ * Shared Name + Color + Searchable Icon Picker + Custom Image Upload form
+ * used identically for both Subscription Groups and Playlists.
+ */
+function renderUnifiedIconColorForm({ titleText, nameLabel, namePlaceholder, formAttr, icons, lang }) {
+  const isPt = lang === 'pt-BR' || lang === 'pt-PT';
+  return `
+    <div class="tp-card tp-group-form">
+      <div class="tp-form-header">
+        <h3>${escapeHtml(titleText)}</h3>
+        <button type="button" class="tp-icon-btn" ${formAttr}="cancel">✕</button>
+      </div>
+
+      <div class="tp-form-grid">
+        <label class="tp-field">
+          <span>${escapeHtml(nameLabel)}</span>
+          <input type="text" class="tp-input" data-tp-grp-input="groupFormName" value="${escapeHtml(modalState.groupFormName)}" placeholder="${escapeHtml(namePlaceholder)}" />
+        </label>
+      </div>
+
+      <div class="tp-field">
+        <span>${escapeHtml(t('group.colorLabel', lang))}</span>
+        <div class="tp-color-swatches">
+          ${DEFAULT_GROUP_COLORS.map(
+            (c) =>
+              `<button type="button" class="tp-swatch ${modalState.groupFormColor === c ? 'tp-swatch-active' : ''}" style="background:${c}" data-tp-pick-color="${c}" aria-label="${c}"></button>`
+          ).join('')}
+          <input type="color" class="tp-color-input" data-tp-grp-input="groupFormColor" value="${escapeHtml(modalState.groupFormColor)}" />
+        </div>
+      </div>
+
+      <div class="tp-field">
+        <div class="tp-icon-picker-head">
+          <span>${escapeHtml(t('group.iconLabel', lang))} <span class="tp-icon-preview" style="color:${escapeHtml(modalState.groupFormColor)}">${renderIconHtml(modalState.groupFormIcon, 22)}</span></span>
+          <label class="tp-btn tp-btn-sm tp-upload-label">
+            📤 ${escapeHtml(t('group.iconUpload', lang))}
+            <input type="file" accept="image/*" id="tp-custom-icon-upload" hidden />
+          </label>
+        </div>
+
+        <input type="search" class="tp-input tp-input-sm" data-tp-grp-input="iconSearch" value="${escapeHtml(modalState.iconSearch)}" placeholder="${escapeHtml(t('group.iconSearch', lang))}" />
+
+        <div class="tp-icon-cats">
+          ${ICON_CATEGORIES.map(
+            (cat) => `
+            <button type="button" class="tp-pill tp-pill-xs ${modalState.iconCategory === cat.id ? 'tp-pill-active' : ''}" data-tp-icon-cat="${escapeHtml(cat.id)}">
+              ${escapeHtml(isPt ? cat.labelPt : cat.labelEn)}
+            </button>`
+          ).join('')}
+        </div>
+
+        <div class="tp-icon-grid">
+          ${icons
+            .map((ic) => {
+              const isSel =
+                modalState.groupFormIcon?.type === ic.type &&
+                modalState.groupFormIcon?.value === ic.value;
+              return `
+                <button type="button" class="tp-icon-choice ${isSel ? 'tp-icon-choice-active' : ''}" data-tp-pick-icon-type="${escapeHtml(ic.type)}" data-tp-pick-icon-id="${escapeHtml(ic.id)}" title="${escapeHtml(isPt ? ic.labelPt : ic.labelEn)}">
+                  ${renderIconHtml({ type: ic.type, value: ic.value }, 20)}
+                </button>`;
+            })
+            .join('')}
+        </div>
+      </div>
+
+      <div class="tp-form-actions">
+        <button type="button" class="tp-btn" ${formAttr}="cancel">${escapeHtml(t('common.cancel', lang))}</button>
+        <button type="button" class="tp-btn tp-btn-primary" ${formAttr}="save">${escapeHtml(t('common.save', lang))}</button>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Render the Playlists tab inside the Manager Modal using the exact same
+ * creation & customization workflow as Subscription Groups.
+ * @param {import('../shared/types.js').AppState} state
+ * @param {string} lang
+ * @returns {string}
+ */
+function renderPlaylistsTab(state, lang) {
+  const playlists = Object.values(state.playlists || {})
+    .filter((p) => Boolean(p?.id))
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0) || (a.title || '').localeCompare(b.title || ''));
+
+  const icons = searchIcons(modalState.iconSearch, modalState.iconCategory);
+  const newPlLabel = t('playlists.newCustom', lang) || (lang === 'en' ? 'New Playlist' : 'Nova Playlist');
+  const editPlTitle = lang === 'en' ? 'Customize Playlist' : lang === 'es' ? 'Personalizar Lista' : 'Personalizar Playlist';
+  const nameLabel = lang === 'en' ? 'Playlist name' : lang === 'es' ? 'Nombre de la lista' : 'Nome da playlist';
+  const namePh = lang === 'en' ? 'e.g. Study, Favorites, Watch Weekend' : lang === 'es' ? 'ej. Estudios, Favoritos' : 'ex: Estudos, Favoritos, Assistir no FDS';
+
+  const formHtml = modalState.showPlaylistForm
+    ? renderUnifiedIconColorForm({
+        titleText: modalState.editingPlaylistId ? editPlTitle : newPlLabel,
+        nameLabel,
+        namePlaceholder: namePh,
+        formAttr: 'data-tp-pl-form',
+        icons,
+        lang,
+      })
+    : '';
+
+  const renderPlVisual = (pl) => {
+    if (pl.customThumbnailUrl) {
+      return `<img class="tp-pl-sb-thumb" src="${escapeHtml(pl.customThumbnailUrl)}" alt="" style="width:22px;height:22px;border-radius:5px;object-fit:cover;" />`;
+    }
+    if (pl.icon && typeof pl.icon === 'object' && pl.icon.type && pl.icon.value) {
+      return renderIconHtml(pl.icon, 20);
+    }
+    if (typeof pl.icon === 'string' && pl.icon) {
+      return escapeHtml(pl.icon);
+    }
+    return '🎵';
+  };
+
+  const rowsHtml = playlists
+    .map((pl) => {
+      const count = Array.isArray(pl.videos) ? pl.videos.length : pl.videoCount || 0;
+      const accent = pl.color || '#ef233c';
+      const sourceBadge = pl.isCustom
+        ? ''
+        : `<span class="tp-badge-count" title="YouTube">YouTube</span>`;
+      const deleteBtn = pl.isCustom
+        ? `<button type="button" class="tp-icon-btn tp-danger" data-tp-pl-del="${escapeHtml(pl.id)}" title="${escapeHtml(t('common.delete', lang))}">🗑</button>`
+        : '';
+      return `
+        <div class="tp-group-row" style="border-left:3px solid ${escapeHtml(accent)}">
+          <div class="tp-group-row-info">
+            <span class="tp-group-row-ico" style="color:${escapeHtml(accent)}">${renderPlVisual(pl)}</span>
+            <span class="tp-group-row-name">${escapeHtml(pl.title || pl.id)}</span>
+            <span class="tp-badge-count">${count}</span>
+            ${sourceBadge}
+          </div>
+          <div class="tp-group-row-actions">
+            <button type="button" class="tp-icon-btn" data-tp-pl-edit="${escapeHtml(pl.id)}" title="${escapeHtml(t('common.edit', lang))}">✎</button>
+            ${deleteBtn}
+          </div>
+        </div>
+      `;
+    })
+    .join('');
+
+  return `
+    <div class="tp-tab-toolbar">
+      <button type="button" class="tp-btn tp-btn-primary tp-btn-sm" data-tp-pl-new="1">
+        + ${escapeHtml(newPlLabel)}
+      </button>
+    </div>
+
+    ${formHtml}
+
+    <section class="tp-card">
+      <h4 class="tp-card-title">${escapeHtml(t('playlists.title', lang) || 'Listas de reprodução')}</h4>
+      ${
+        playlists.length > 0
+          ? rowsHtml
           : `<div class="tp-muted tp-small">${escapeHtml(t('common.empty', lang))}</div>`
       }
     </section>
@@ -2798,24 +2934,29 @@ function renderManagerModal() {
   backdrop.className = `tp-modal-backdrop ${getThemeClass(state)}`;
 
   const tabBody =
-    modalState.tab === 'channels'
-      ? renderChannelsTab(state, lang)
-      : modalState.tab === 'community'
-        ? renderCommunityTab(state, lang)
-        : renderGroupsTab(state, lang);
+    modalState.tab === 'playlists'
+      ? renderPlaylistsTab(state, lang)
+      : modalState.tab === 'channels'
+        ? renderChannelsTab(state, lang)
+        : modalState.tab === 'community'
+          ? renderCommunityTab(state, lang)
+          : renderGroupsTab(state, lang);
 
-  const tabGroupsLabel = lang === 'pt-BR' ? 'Grupos' : 'Groups';
-  const tabChannelsLabel = lang === 'pt-BR' ? 'Canais' : 'Channels';
-  const tabCommunityLabel = lang === 'pt-BR' ? 'Comunidade' : 'Community';
+  const tabGroupsLabel = t('sidebar.subscriptionGroups', lang);
+  const tabPlaylistsLabel = t('playlists.title', lang) || 'Playlists';
+  const tabChannelsLabel = t('channels.title', lang) || (lang === 'en' ? 'Channels' : 'Canais');
+  const tabCommunityLabel = t('community.title', lang) || (lang === 'en' ? 'Community' : 'Comunidade');
+  const modalLogoSvg = `<svg class="tp-brand-svg" viewBox="0 0 32 32" width="20" height="20" aria-hidden="true"><defs><linearGradient id="tpModGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="55%" stop-color="#ef233c"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs><rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="url(#tpModGrad)"/><rect x="6" y="7" width="3" height="14" rx="1.5" fill="rgba(255,255,255,0.9)"/><path d="M13 8.8 L24 14.5 L13 20.2 Z" fill="#ffffff"/><rect x="6" y="23" width="20" height="2.4" rx="1.2" fill="rgba(255,255,255,0.85)"/></svg>`;
 
   backdrop.innerHTML = `
     <div class="tp-modal" role="dialog" aria-modal="true" aria-label="${escapeHtml(BRAND_NAME)} Manager">
       <header class="tp-modal-header">
         <div class="tp-modal-brand">
-          <span class="tp-brand-dot"></span>
+          ${modalLogoSvg}
           <strong>${escapeHtml(BRAND_NAME)}</strong>
           <nav class="tp-modal-tabs">
             <button type="button" class="tp-tab-btn ${modalState.tab === 'groups' ? 'tp-tab-active' : ''}" data-tp-tab="groups">🗂️ ${escapeHtml(tabGroupsLabel)}</button>
+            <button type="button" class="tp-tab-btn ${modalState.tab === 'playlists' ? 'tp-tab-active' : ''}" data-tp-tab="playlists">🎵 ${escapeHtml(tabPlaylistsLabel)}</button>
             <button type="button" class="tp-tab-btn ${modalState.tab === 'channels' ? 'tp-tab-active' : ''}" data-tp-tab="channels">📺 ${escapeHtml(tabChannelsLabel)} (${Object.keys(state.channels || {}).length})</button>
             <button type="button" class="tp-tab-btn ${modalState.tab === 'community' ? 'tp-tab-active' : ''}" data-tp-tab="community">💬 ${escapeHtml(tabCommunityLabel)}</button>
           </nav>
@@ -2998,6 +3139,116 @@ function bindManagerModalEvents(backdrop) {
         if (res?.ok && res.state) {
           applyNewState(res.state);
           modalState.showGroupForm = false;
+          showToast(t('toast.saved', lang), 'success');
+          renderManagerModal();
+        } else if (res?.error) {
+          showToast(t('toast.error', lang, { message: res.error }), 'error');
+        }
+      }
+      return;
+    }
+
+    // ---- PLAYLISTS TAB ACTIONS (identical flow to Groups) ----
+    const newPlBtn = target.closest('[data-tp-pl-new]');
+    if (newPlBtn) {
+      modalState.showPlaylistForm = true;
+      modalState.editingPlaylistId = null;
+      modalState.groupFormName = '';
+      modalState.groupFormColor = DEFAULT_GROUP_COLORS[0];
+      modalState.groupFormIcon = { type: 'emoji', value: '🎵' };
+      modalState.iconSearch = '';
+      modalState.iconCategory = 'all';
+      renderManagerModal();
+      return;
+    }
+
+    const editPlBtn = target.closest('[data-tp-pl-edit]');
+    if (editPlBtn) {
+      const pid = editPlBtn.getAttribute('data-tp-pl-edit');
+      const pl = st?.playlists?.[pid];
+      if (pl) {
+        modalState.showPlaylistForm = true;
+        modalState.editingPlaylistId = pl.id;
+        modalState.groupFormName = pl.title || '';
+        modalState.groupFormColor = pl.color || DEFAULT_GROUP_COLORS[0];
+        if (pl.customThumbnailUrl) {
+          modalState.groupFormIcon = { type: 'custom', value: pl.customThumbnailUrl };
+        } else if (pl.icon && typeof pl.icon === 'object' && pl.icon.type && pl.icon.value) {
+          modalState.groupFormIcon = pl.icon;
+        } else if (typeof pl.icon === 'string' && pl.icon) {
+          modalState.groupFormIcon = { type: 'emoji', value: pl.icon };
+        } else {
+          modalState.groupFormIcon = { type: 'emoji', value: '🎵' };
+        }
+        renderManagerModal();
+      }
+      return;
+    }
+
+    const delPlBtn = target.closest('[data-tp-pl-del]');
+    if (delPlBtn) {
+      const pid = delPlBtn.getAttribute('data-tp-pl-del');
+      const pl = st?.playlists?.[pid];
+      if (!pl || !pl.isCustom) return;
+      if (!window.confirm(t('group.deleteConfirm', lang, { name: pl.title || pl.id }))) {
+        return;
+      }
+      const res = await sendBg(MESSAGE_ACTIONS.REMOVE_PLAYLIST, { id: pid });
+      if (res?.ok && res.state) {
+        applyNewState(res.state);
+        showToast(t('toast.saved', lang), 'success');
+        renderManagerModal();
+      }
+      return;
+    }
+
+    const plFormBtn = target.closest('[data-tp-pl-form]');
+    if (plFormBtn) {
+      const act = plFormBtn.getAttribute('data-tp-pl-form');
+      if (act === 'cancel') {
+        modalState.showPlaylistForm = false;
+        renderManagerModal();
+      } else if (act === 'save') {
+        const title = modalState.groupFormName.trim();
+        if (!title) {
+          showToast(lang === 'en' ? 'Enter a playlist name.' : 'Digite o nome da playlist.', 'warning');
+          return;
+        }
+        const isCustomImg = modalState.groupFormIcon?.type === 'custom' && modalState.groupFormIcon?.value;
+        let res;
+        if (modalState.editingPlaylistId) {
+          res = await sendBg(MESSAGE_ACTIONS.CUSTOMIZE_PLAYLIST, {
+            id: modalState.editingPlaylistId,
+            playlistId: modalState.editingPlaylistId,
+            title,
+            color: modalState.groupFormColor,
+            icon: modalState.groupFormIcon,
+            customThumbnailUrl: isCustomImg ? modalState.groupFormIcon.value : '',
+          });
+        } else {
+          const newId = createId('pl');
+          res = await sendBg(MESSAGE_ACTIONS.UPSERT_PLAYLISTS, {
+            playlists: [
+              {
+                id: newId,
+                title,
+                isCustom: true,
+                color: modalState.groupFormColor,
+                icon: modalState.groupFormIcon,
+                customThumbnailUrl: isCustomImg ? modalState.groupFormIcon.value : '',
+                videos: [],
+                videoCount: 0,
+                watchedCount: 0,
+                groupIds: [],
+                thumbnailUrl: '',
+                updatedAt: Date.now(),
+              },
+            ],
+          });
+        }
+        if (res?.ok && res.state) {
+          applyNewState(res.state);
+          modalState.showPlaylistForm = false;
           showToast(t('toast.saved', lang), 'success');
           renderManagerModal();
         } else if (res?.error) {

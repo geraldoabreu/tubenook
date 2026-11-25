@@ -126,6 +126,30 @@ describe('i18n.js — Completeness & Interpolation (4 Locales)', () => {
     assert.equal(t('group.deleteConfirm', 'en', { name: 'Tech' }), 'Delete group "Tech"?');
     assert.equal(t('non.existent.key', 'en'), 'non.existent.key');
   });
+
+  it('has zero missing i18n keys referenced in src/**/*.js and src/**/*.html', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const knownKeys = new Set(Object.keys(TRANSLATIONS['pt-BR']));
+    const missing = [];
+    const walk = (dir) => {
+      for (const entry of fs.readdirSync(dir)) {
+        const full = path.join(dir, entry);
+        if (fs.statSync(full).isDirectory()) walk(full);
+        else if (full.endsWith('.js') || full.endsWith('.html')) {
+          const src = fs.readFileSync(full, 'utf8');
+          for (const m of src.matchAll(/\bt\(\s*['"]([a-zA-Z0-9_.-]+)['"]/g)) {
+            if (!knownKeys.has(m[1])) missing.push(`${m[1]} (${full})`);
+          }
+          for (const m of src.matchAll(/data-i18n(?:-[a-z]+)?=['"]([a-zA-Z0-9_.-]+)['"]/g)) {
+            if (!knownKeys.has(m[1])) missing.push(`${m[1]} (${full})`);
+          }
+        }
+      }
+    };
+    walk(path.resolve('src'));
+    assert.deepEqual(missing, [], `Missing i18n keys found: ${missing.join(', ')}`);
+  });
 });
 
 describe('service-worker.js — parseYouTubeAtomFeed & handleMessage', () => {
